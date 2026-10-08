@@ -1,0 +1,32 @@
+.profile-page {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 80px 24px;
+}
+.profile-card {
+  width: 100%; max-width: 420px; text-align: center; padding: 40px;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: 24px;
+}
+.profile-avatar {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: var(--accent-gradient);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px; font-size: 2rem; font-weight: 800; color: #fff;
+}
+.profile-card h1 { color: var(--text-color); margin-bottom: 8px; }
+.role-badge {
+  display: inline-block; padding: 4px 14px; border-radius: 12px;
+  background: var(--selection-bg); color: var(--accent-primary);
+  font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.save-btn {
+  width: 100%; padding: 14px; margin-top: 8px;
+  background: var(--accent-gradient);
+  color: #fff; border: none; border-radius: 12px;
+  font-weight: 700; cursor: pointer; display: flex;
+  align-items: center; justify-content: center; gap: 8px; transition: 0.3s;
+}
+.save-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px var(--shadow-color); }
+.save-btn:disabled { opacity: 0.6; }
+.joined { color: var(--text-muted); font-size: 0.8rem; margin-top: 20px; }

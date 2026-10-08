@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.env
+.env.*
+*.log
+__pycache__/
+.DS_Store
+
+# Large ML model / dataset (separate try-on service)
+server/eCommerce API/dressing-in-order/
+server/eCommerce API/*.zip
+server/eCommerce API/*.pth
+server/eCommerce API/data/

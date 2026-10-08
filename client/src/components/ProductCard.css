@@ -1,0 +1,59 @@
+.product-card {
+  background: var(--card-bg); border-radius: 16px;
+  overflow: hidden; text-decoration: none; color: var(--text-color);
+  border: 1px solid var(--card-border);
+  transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+.product-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--accent-primary);
+  box-shadow: 0 20px 40px var(--shadow-color);
+}
+.card-image {
+  position: relative; overflow: hidden; aspect-ratio: 3/4;
+  background: var(--input-bg);
+}
+.card-image img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.5s;
+}
+.product-card:hover .card-image img { transform: scale(1.08); }
+.card-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  display: flex; justify-content: center; gap: 10px;
+  padding: 16px; background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  transform: translateY(100%); transition: transform 0.3s;
+}
+.product-card:hover .card-overlay { transform: translateY(0); }
+.card-overlay button, .card-overlay a {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1rem; transition: all 0.2s;
+  text-decoration: none;
+}
+.card-overlay button:hover, .card-overlay a:hover {
+  background: var(--accent-primary); border-color: var(--accent-primary); transform: scale(1.1);
+}
+.stock-badge {
+  position: absolute; top: 12px; left: 12px;
+  padding: 4px 10px; border-radius: 6px;
+  font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+}
+.stock-badge.low { background: rgba(245,158,11,0.9); color: #000; }
+.stock-badge.out { background: rgba(239,68,68,0.9); color: #fff; }
+.card-info { padding: 16px; background: var(--card-bg); }
+.card-category {
+  font-size: 0.75rem; color: var(--accent-primary); text-transform: uppercase;
+  font-weight: 700; letter-spacing: 1px; display: block; margin-bottom: 4px;
+}
+.card-info h3 {
+  margin: 0 0 8px; font-size: 1.1rem; font-weight: 700;
+  color: var(--text-color);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.card-price {
+  font-size: 1.2rem; font-weight: 800;
+  color: var(--text-color);
+}

@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  /* Light Theme (Default) */
+  --bg-color: #ffffff;
+  --text-color: #0f172a;
+  --text-muted: #475569;
+  --card-bg: #f8fafc;
+  --card-border: #e2e8f0;
+  --input-bg: #f1f5f9;
+  --nav-bg: rgba(255, 255, 255, 0.9);
+  --accent-primary: #7c3aed;
+  --accent-secondary: #db2777;
+  --accent-gradient: linear-gradient(135deg, #7c3aed, #db2777);
+  --selection-bg: rgba(124, 58, 237, 0.1);
+  --shadow-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme='dark'] {
+  --bg-color: #0a0a0f;
+  --text-color: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.5);
+  --card-bg: rgba(255, 255, 255, 0.04);
+  --card-border: rgba(255, 255, 255, 0.06);
+  --input-bg: rgba(255, 255, 255, 0.05);
+  --nav-bg: rgba(10, 10, 15, 0.8);
+  --accent-primary: #a855f7;
+  --accent-secondary: #ec4899;
+  --accent-gradient: linear-gradient(135deg, #a855f7, #ec4899);
+  --selection-bg: rgba(168, 85, 247, 0.3);
+  --shadow-color: rgba(0, 0, 0, 0.5);
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 14px;
+  line-height: 1.6;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--accent-primary); opacity: 0.3; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { opacity: 0.5; }
+
+/* Selection */
+::selection {
+  background: var(--selection-bg);
+  color: inherit;
+}
+
+/* Links */
+a { transition: all 0.2s ease; color: inherit; text-decoration: none; }
+
+/* Loading screen */
+.loading-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+/* Empty states */
+.empty-state {
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--text-muted);
+}
+
+.empty-state .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 12px 28px;
+  background: var(--accent-gradient);
+  color: #fff;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: all 0.3s;
+}
+
+.empty-state .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px var(--selection-bg);
+}
+
+/* Layout Utilities */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.text-center { text-align: center; }
+
+/* Shared product grid (used on home & catalog) */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 32px;
+  width: 100%;
+}
+
+/* Skeleton loading */
+.skeleton-card {
+  aspect-ratio: 3/5;
+  border-radius: 16px;
+  background: linear-gradient(110deg,
+    var(--card-bg) 30%,
+    var(--card-border) 50%,
+    var(--card-bg) 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  to { background-position: -200% 0; }
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
