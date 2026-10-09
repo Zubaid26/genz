@@ -35,6 +35,7 @@ app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/payment', require('./routes/paymentRoutes'));
 app.use('/api/tryon', require('./routes/tryonRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
+app.use('/api/coupons', require('./routes/couponRoutes'));
 
 // Health check
 app.get('/', (req, res) => {
@@ -51,3 +52,5 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+module.exports = app;
