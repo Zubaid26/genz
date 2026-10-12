@@ -37,7 +37,7 @@ const products = [
     category: 'Outerwear',
     price: 129.99,
     stock: 15,
-    image_url: 'https://images.unsplash.com/photo-1591047139829-d91aec16adcd?q=80&w=800',
+    image_url: 'https://images.unsplash.com/photo-1548126032-079a0fb0099d?q=80&w=800',
     overlay_image_url: 'https://cdn-icons-png.flaticon.com/512/3531/3531744.png',
     description: 'Shiny metallic puffer jacket that captures the Y2K vibe. Stay warm while looking futuristic.'
   },
@@ -55,7 +55,7 @@ const products = [
     category: 'Outerwear',
     price: 89.99,
     stock: 25,
-    image_url: 'https://images.unsplash.com/photo-1576871333019-220ef3c68f59?q=80&w=800',
+    image_url: 'https://images.unsplash.com/photo-1601333144130-8cbb312386b6?q=80&w=800',
     overlay_image_url: 'https://cdn-icons-png.flaticon.com/512/3531/3531744.png',
     description: 'Classic denim jacket with modern distressed details. A versatile layer for all seasons.'
   },
@@ -91,7 +91,7 @@ const products = [
     category: 'Accessories',
     price: 14.99,
     stock: 200,
-    image_url: 'https://images.unsplash.com/photo-1511499767390-91f19703000a?q=80&w=800',
+    image_url: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=800',
     overlay_image_url: 'https://cdn-icons-png.flaticon.com/512/3531/3531744.png',
     description: 'Lightweight round sunglasses with tinted lenses. A must-have accessory for summer festivals.'
   },
@@ -100,7 +100,7 @@ const products = [
     category: 'Outerwear',
     price: 95.00,
     stock: 35,
-    image_url: 'https://images.unsplash.com/photo-1591047139829-d91aec16adcd?q=80&w=800',
+    image_url: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?q=80&w=800',
     overlay_image_url: 'https://cdn-icons-png.flaticon.com/512/3531/3531744.png',
     description: 'Water-resistant windbreaker with futuristic techwear details. Designed for both style and performance.'
   },

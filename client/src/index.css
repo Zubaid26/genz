@@ -108,7 +108,9 @@ a { transition: all 0.2s ease; color: inherit; text-decoration: none; }
 .container {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 24px;
+  /* sides only, so a page's own top/bottom padding (e.g. below the fixed navbar) still applies */
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 .text-center { text-align: center; }

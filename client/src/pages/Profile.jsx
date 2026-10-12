@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FiUser, FiMail, FiSave } from 'react-icons/fi';
 import useAuth from '../hooks/useAuth';
 import API from '../utils/axiosInstance';
@@ -10,6 +10,14 @@ export default function Profile() {
   const [name, setName] = useState(user?.full_name || '');
   const [email, setEmail] = useState(user?.email || '');
   const [loading, setLoading] = useState(false);
+  const [joined, setJoined] = useState(user?.created_at || null);
+
+  // The login response does not include the signup date, so load the full profile for it
+  useEffect(() => {
+    API.get('/auth/profile')
+      .then(res => setJoined(res.data.created_at))
+      .catch(() => {});
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,7 +52,7 @@ export default function Profile() {
             {loading ? 'Saving...' : <><FiSave /> Save Changes</>}
           </button>
         </form>
-        <p className="joined">Member since {new Date(user?.created_at).toLocaleDateString()}</p>
+        {joined && <p className="joined">Member since {new Date(joined).toLocaleDateString()}</p>}
       </div>
     </div>
   );

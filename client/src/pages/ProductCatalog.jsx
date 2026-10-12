@@ -12,7 +12,7 @@ export default function ProductCatalog() {
   const [search, setSearch] = useState(searchParams.get('search') || '');
   const [category, setCategory] = useState(searchParams.get('category') || '');
 
-  const categories = ['All', 'Shirts', 'Pants', 'Dresses', 'Jackets', 'Shoes', 'Accessories'];
+  const categories = ['All', 'Shalwar Kameez', 'Kurtas', 'Hoodies', 'T-Shirts', 'Jeans', 'Women'];
 
   useEffect(() => {
     setLoading(true);

@@ -43,3 +43,8 @@
   text-align: center; margin-top: 24px; color: var(--text-muted); font-size: 0.9rem;
 }
 .auth-footer a { color: var(--accent-primary); text-decoration: none; font-weight: 600; }
+
+/* Inline field validation */
+.input-group input.invalid { border-color: #ef4444; }
+.input-group input.invalid:focus { box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18); }
+.field-error { margin: 6px 4px 0; color: #ef4444; font-size: 0.78rem; font-weight: 500; }

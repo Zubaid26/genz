@@ -23,10 +23,10 @@ export default function Footer() {
         <div className="footer-col">
           <h4>Shop</h4>
           <Link to="/products">All Products</Link>
-          <Link to="/products?category=Shirts">Shirts</Link>
-          <Link to="/products?category=Pants">Pants</Link>
-          <Link to="/products?category=Jackets">Jackets</Link>
-          <Link to="/products?category=Shoes">Shoes</Link>
+          <Link to="/products?category=Shalwar Kameez">Shalwar Kameez</Link>
+          <Link to="/products?category=Kurtas">Kurtas</Link>
+          <Link to="/products?category=Hoodies">Hoodies</Link>
+          <Link to="/products?category=Jeans">Jeans</Link>
         </div>
 
         {/* Account */}

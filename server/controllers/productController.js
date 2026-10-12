@@ -141,6 +141,9 @@ exports.createProduct = async (req, res) => {
 
     res.status(201).json({ message: 'Product created.', product });
   } catch (error) {
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ message: Object.values(error.errors).map((e) => e.message).join(' ') });
+    }
     res.status(500).json({ message: 'Server error.', error: error.message });
   }
 };
@@ -160,6 +163,9 @@ exports.updateProduct = async (req, res) => {
 
     res.json({ message: 'Product updated.', product });
   } catch (error) {
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ message: Object.values(error.errors).map((e) => e.message).join(' ') });
+    }
     res.status(500).json({ message: 'Server error.', error: error.message });
   }
 };

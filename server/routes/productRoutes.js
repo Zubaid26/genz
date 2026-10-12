@@ -4,6 +4,14 @@ const admin = require('../middleware/adminMiddleware');
 const ctrl = require('../controllers/productController');
 const reviews = require('../controllers/reviewController');
 
+// A malformed id can never match a product, so answer 404 instead of letting Mongoose throw
+router.param('id', (req, res, next, id) => {
+  if (!require('mongoose').isValidObjectId(id)) {
+    return res.status(404).json({ message: 'Product not found.' });
+  }
+  next();
+});
+
 router.get('/', ctrl.getAllProducts);
 router.get('/analytics', auth, admin, ctrl.getProductAnalytics);
 router.get('/suggest', ctrl.suggestProducts);

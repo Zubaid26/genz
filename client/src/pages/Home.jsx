@@ -11,16 +11,16 @@ import './Home.css';
 const img = (id, w = 800) => `https://images.unsplash.com/photo-${id}?q=80&w=${w}`;
 
 const CATEGORIES = [
-  { name: 'Shirts', desc: 'Tees, flannels & basics', photo: '1607345366928-199ea26cfe3e' },
-  { name: 'Pants', desc: 'Denim, chinos & joggers', photo: '1473966968600-fa801b869a1a' },
-  { name: 'Dresses', desc: 'Statement pieces', photo: '1539008835657-9e8e9680c956' },
-  { name: 'Jackets', desc: 'Layering essentials', photo: '1520975954732-35dd22299614' },
-  { name: 'Shoes', desc: 'Sneakers & runners', photo: '1595950653106-6c9ebd614d3a' },
-  { name: 'Accessories', desc: 'Bags, shades & more', photo: '1591561954557-26941169b49e' },
+  { name: 'Shalwar Kameez', desc: 'Classic and festive suits', photo: '1734418040900-e964f84e8abb' },
+  { name: 'Kurtas', desc: 'Everyday and event kurtas', photo: '1727835523545-70ee992b5763' },
+  { name: 'Hoodies', desc: 'Oversized and cozy fits', photo: '1564557287817-3785e38ec1f5' },
+  { name: 'T-Shirts', desc: 'Boxy and graphic tees', photo: '1627225793904-a2f900a6e4cf' },
+  { name: 'Jeans', desc: 'Baggy and wide-leg denim', photo: '1674075872359-a174bc7ed420' },
+  { name: 'Women', desc: 'Kurtis, suits and more', photo: '1597983073540-684a10b15ab1' },
 ];
 
 // Shown in the hero collage if the product API can't be reached
-const HERO_FALLBACK = ['1539008835657-9e8e9680c956', '1520975954732-35dd22299614', '1595950653106-6c9ebd614d3a'];
+const HERO_FALLBACK = ['1734418040900-e964f84e8abb', '1564557287817-3785e38ec1f5', '1727835523545-70ee992b5763'];
 
 const MARQUEE = ['New Drops Weekly', 'Virtual Try-On', 'Streetwear Essentials', 'Free Shipping Over $50', 'Easy 30-Day Returns', 'Made For Gen-Z'];
 
@@ -90,7 +90,7 @@ export default function Home() {
   // One in-stock product from a few different categories for the hero collage
   const heroPicks = useMemo(() => {
     const picks = [];
-    for (const cat of ['Dresses', 'Jackets', 'Shoes']) {
+    for (const cat of ['Shalwar Kameez', 'Hoodies', 'Kurtas']) {
       const p = products.find(x => x.category === cat && x.stock > 0);
       if (p) picks.push(p);
     }
@@ -130,7 +130,7 @@ export default function Home() {
               <span className="gradient-text">speaks Gen-Z.</span>
             </h1>
             <p className="hero-desc">
-              Streetwear, oversized fits and bold accessories. Try pieces on with your camera
+              Shalwar kameez, kurtas, oversized hoodies and baggy fits. Try pieces on with the AI studio
               before you buy, and have them at your door in days.
             </p>
             <div className="hero-btns">
@@ -260,7 +260,7 @@ export default function Home() {
           <Reveal className="tryon-visual">
             <div className="tryon-frame">
               <img
-                src={heroPicks[0]?.image_url || img('1595777457583-95e059d581b8', 700)}
+                src={heroPicks[0]?.image_url || img('1734418040900-e964f84e8abb', 700)}
                 alt="Virtual try-on preview"
                 loading="lazy"
               />

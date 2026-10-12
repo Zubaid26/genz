@@ -7,8 +7,8 @@ const connectDB = require('./config/db');
 // Load env vars
 dotenv.config();
 
-// Connect to MongoDB
-connectDB();
+// Start connecting right away (warms the connection); requests also wait for it below
+connectDB().catch(() => {});
 
 const app = express();
 
@@ -27,6 +27,16 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 
+// Make sure the database is connected before any API route runs
+app.use('/api', async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    res.status(503).json({ message: 'Database unavailable.', error: error.message });
+  }
+});
+
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
@@ -44,6 +54,9 @@ app.get('/', (req, res) => {
 
 // Global error handler
 app.use((err, req, res, next) => {
+  if (err.message === 'Not allowed by CORS') {
+    return res.status(403).json({ message: 'Origin not allowed.' });
+  }
   console.error(err.stack);
   res.status(500).json({ message: 'Something went wrong!', error: err.message });
 });
