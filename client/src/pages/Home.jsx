@@ -19,6 +19,9 @@ const CATEGORIES = [
   { name: 'Accessories', desc: 'Bags, shades & more', photo: '1591561954557-26941169b49e' },
 ];
 
+// Shown in the hero collage if the product API can't be reached
+const HERO_FALLBACK = ['1539008835657-9e8e9680c956', '1520975954732-35dd22299614', '1595950653106-6c9ebd614d3a'];
+
 const MARQUEE = ['New Drops Weekly', 'Virtual Try-On', 'Streetwear Essentials', 'Free Shipping Over $50', 'Easy 30-Day Returns', 'Made For Gen-Z'];
 
 const STEPS = [
@@ -56,15 +59,20 @@ function Reveal({ children, className = '', delay = 0 }) {
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
-  useEffect(() => {
+  const loadProducts = () => {
+    setLoading(true);
+    setError(false);
     API.get('/products', { params: { sort: 'newest' } })
       .then(res => setProducts(Array.isArray(res.data) ? res.data : []))
-      .catch(() => {})
+      .catch(() => setError(true))
       .finally(() => setLoading(false));
-  }, []);
+  };
+
+  useEffect(loadProducts, []);
 
   // Newest in-stock items, spread across categories so the grid isn't all one type
   const arrivals = useMemo(() => {
@@ -152,11 +160,15 @@ export default function Home() {
 
           <div className="hero-visual" aria-hidden={heroPicks.length === 0}>
             {heroPicks.length === 0 ? (
-              <>
-                <div className="hv-card hv-1 hv-skeleton" />
-                <div className="hv-card hv-2 hv-skeleton" />
-                <div className="hv-card hv-3 hv-skeleton" />
-              </>
+              HERO_FALLBACK.map((photo, i) => (
+                loading ? (
+                  <div key={photo} className={`hv-card hv-${i + 1} hv-skeleton`} />
+                ) : (
+                  <Link key={photo} to="/products" className={`hv-card hv-${i + 1}`}>
+                    <img src={img(photo, 600)} alt="" />
+                  </Link>
+                )
+              ))
             ) : (
               heroPicks.map((p, i) => (
                 <Link key={p._id} to={`/products/${p._id}`} className={`hv-card hv-${i + 1}`}>
@@ -233,7 +245,12 @@ export default function Home() {
             : arrivals.map(p => <ProductCard key={p._id} product={p} />)}
         </div>
         {!loading && arrivals.length === 0 && (
-          <p className="section-sub center-text">New products are on the way. Check back soon.</p>
+          <div className="arrivals-empty">
+            <p className="section-sub">
+              {error ? "We couldn't load products right now." : 'New products are on the way. Check back soon.'}
+            </p>
+            {error && <button type="button" className="btn-hero-outline" onClick={loadProducts}>Try again</button>}
+          </div>
         )}
       </section>
 

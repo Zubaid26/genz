@@ -231,6 +231,8 @@
 .home-page .arrivals { padding: 48px 24px 88px; }
 .arrivals-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
 
+.arrivals-empty { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 24px 0; }
+
 /* ── TRY-ON SPOTLIGHT ───────────────── */
 .tryon-section {
   padding: 96px 0;
