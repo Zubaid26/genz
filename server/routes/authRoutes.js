@@ -18,6 +18,8 @@ router.post('/logout', ctrl.logout);
 router.get('/profile', auth, ctrl.getProfile);
 router.put('/profile', auth, ctrl.updateProfile);
 router.get('/wishlist', auth, ctrl.getWishlist);
+router.post('/wishlist/share', auth, ctrl.shareWishlist);
+router.get('/wishlist/shared/:token', ctrl.getSharedWishlist);
 router.post('/wishlist/:id', auth, ctrl.addToWishlist);
 router.delete('/wishlist/:id', auth, ctrl.removeFromWishlist);
 router.get('/orders', auth, ctrl.getOrderHistory);

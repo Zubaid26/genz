@@ -166,6 +166,34 @@ exports.getWishlist = async (req, res) => {
   }
 };
 
+// POST /api/auth/wishlist/share — get (or create) the user's public wishlist link token
+exports.shareWishlist = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user.share_token) {
+      user.share_token = require('crypto').randomBytes(12).toString('hex');
+      await user.save();
+    }
+    res.json({ token: user.share_token });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error.', error: error.message });
+  }
+};
+
+// GET /api/auth/wishlist/shared/:token — public view of someone's wishlist
+exports.getSharedWishlist = async (req, res) => {
+  try {
+    const user = await User.findOne({ share_token: req.params.token })
+      .populate('wishlist', 'name price image_url category stock avg_rating review_count');
+    if (!user) {
+      return res.status(404).json({ message: 'Wishlist not found.' });
+    }
+    res.json({ owner: user.full_name.split(' ')[0], items: user.wishlist });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error.', error: error.message });
+  }
+};
+
 // POST /api/auth/wishlist/:id
 exports.addToWishlist = async (req, res) => {
   try {

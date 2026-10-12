@@ -33,6 +33,20 @@ const ProductSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  variants: [{
+    _id: false,
+    size: { type: String, default: '', trim: true },
+    color: { type: String, default: '', trim: true },
+    stock: { type: Number, default: 0, min: 0 }
+  }],
+  avg_rating: {
+    type: Number,
+    default: 0
+  },
+  review_count: {
+    type: Number,
+    default: 0
+  },
   created_at: {
     type: Date,
     default: Date.now

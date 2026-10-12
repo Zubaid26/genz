@@ -20,7 +20,26 @@ const OrderSchema = new mongoose.Schema({
     price: {
       type: Number,
       required: true
-    }
+    },
+    size: { type: String, default: '' },
+    color: { type: String, default: '' }
+  }],
+  subtotal: {
+    type: Number,
+    default: 0
+  },
+  discount: {
+    type: Number,
+    default: 0
+  },
+  coupon_code: {
+    type: String,
+    default: ''
+  },
+  status_history: [{
+    _id: false,
+    status: String,
+    at: { type: Date, default: Date.now }
   }],
   total_price: {
     type: Number,

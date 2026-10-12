@@ -1,7 +1,9 @@
 const Order = require('../models/Order');
 const Cart = require('../models/Cart');
 const Product = require('../models/Product');
+const Coupon = require('../models/Coupon');
 const generateInvoice = require('../utils/generateInvoice');
+const { recalcCart } = require('../utils/cartTotals');
 
 // POST /api/orders/place — place order after payment
 exports.placeOrder = async (req, res) => {
@@ -14,10 +16,18 @@ exports.placeOrder = async (req, res) => {
       return res.status(400).json({ message: 'Cart is empty.' });
     }
 
-    // Check stock availability
+    // Re-validate the coupon so an expired or used-up code can't be applied
+    await recalcCart(cart);
+
+    // Check stock availability (per variant when the product has variants)
     for (const item of cart.items) {
       const product = await Product.findById(item.product_id._id || item.product_id);
-      if (!product || product.stock < item.quantity) {
+      const hasVariants = product?.variants?.length > 0;
+      const variant = hasVariants
+        ? product.variants.find((v) => v.size === (item.size || '') && v.color === (item.color || ''))
+        : null;
+      const available = hasVariants ? (variant ? variant.stock : 0) : product?.stock;
+      if (!product || available < item.quantity) {
         return res.status(400).json({
           message: `Insufficient stock for ${product?.name || 'a product'}.`
         });
@@ -30,19 +40,35 @@ exports.placeOrder = async (req, res) => {
       items: cart.items.map(item => ({
         product_id: item.product_id._id || item.product_id,
         quantity: item.quantity,
-        price: item.price
+        price: item.price,
+        size: item.size || '',
+        color: item.color || ''
       })),
+      subtotal: cart.subtotal,
+      discount: cart.discount,
+      coupon_code: cart.coupon_code,
       total_price: cart.total,
       payment_intent_id: payment_intent_id || '',
-      status: 'Placed'
+      status: 'Placed',
+      status_history: [{ status: 'Placed', at: new Date() }]
     });
+
+    if (cart.coupon_code) {
+      await Coupon.updateOne({ code: cart.coupon_code }, { $inc: { used_count: 1 } });
+    }
 
     // Decrement stock for each product
     for (const item of cart.items) {
-      await Product.findByIdAndUpdate(
-        item.product_id._id || item.product_id,
-        { $inc: { stock: -item.quantity } }
-      );
+      const productId = item.product_id._id || item.product_id;
+      const product = await Product.findById(productId).select('variants');
+      if (product?.variants?.length) {
+        await Product.updateOne(
+          { _id: productId, variants: { $elemMatch: { size: item.size || '', color: item.color || '' } } },
+          { $inc: { 'variants.$.stock': -item.quantity, stock: -item.quantity } }
+        );
+      } else {
+        await Product.findByIdAndUpdate(productId, { $inc: { stock: -item.quantity } });
+      }
     }
 
     // Generate invoice
@@ -56,7 +82,8 @@ exports.placeOrder = async (req, res) => {
 
     // Clear cart
     cart.items = [];
-    cart.total = 0;
+    cart.coupon_code = '';
+    await recalcCart(cart);
     await cart.save();
 
     res.status(201).json({
@@ -120,7 +147,7 @@ exports.updateOrderStatus = async (req, res) => {
 
     const order = await Order.findByIdAndUpdate(
       req.params.id,
-      { status },
+      { status, $push: { status_history: { status, at: new Date() } } },
       { new: true }
     );
 

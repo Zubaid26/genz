@@ -30,6 +30,10 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product'
   }],
+  share_token: {
+    type: String,
+    default: ''
+  },
   created_at: {
     type: Date,
     default: Date.now

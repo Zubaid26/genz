@@ -7,5 +7,7 @@ router.post('/add', auth, ctrl.addToCart);
 router.put('/update/:itemId', auth, ctrl.updateCartItem);
 router.delete('/remove/:itemId', auth, ctrl.removeFromCart);
 router.delete('/clear', auth, ctrl.clearCart);
+router.post('/coupon', auth, ctrl.applyCoupon);
+router.delete('/coupon', auth, ctrl.removeCoupon);
 
 module.exports = router;
