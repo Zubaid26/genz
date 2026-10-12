@@ -60,24 +60,6 @@ const products = [
     description: 'Classic denim jacket with modern distressed details. A versatile layer for all seasons.'
   },
   {
-    name: 'Gothic Lolita Boots',
-    category: 'Footwear',
-    price: 110.00,
-    stock: 20,
-    image_url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800',
-    overlay_image_url: 'https://cdn-icons-png.flaticon.com/512/3531/3531744.png',
-    description: 'Platform gothic boots with silver buckle details. Elevate your street style literally.'
-  },
-  {
-    name: 'Anime Print Tote Bag',
-    category: 'Accessories',
-    price: 19.99,
-    stock: 150,
-    image_url: 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=800',
-    overlay_image_url: 'https://cdn-icons-png.flaticon.com/512/3531/3531744.png',
-    description: 'Eco-friendly canvas tote bag with a custom anime aesthetic print. Perfect for daily essentials.'
-  },
-  {
     name: 'Wide-Leg Utility Jeans',
     category: 'Pants',
     price: 65.00,
@@ -85,15 +67,6 @@ const products = [
     image_url: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800',
     overlay_image_url: 'https://cdn-icons-png.flaticon.com/512/3531/3531744.png',
     description: 'High-waisted utility jeans with a wide-leg cut. Combines comfort with a rugged aesthetic.'
-  },
-  {
-    name: 'Retro Round Sunglasses',
-    category: 'Accessories',
-    price: 14.99,
-    stock: 200,
-    image_url: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=800',
-    overlay_image_url: 'https://cdn-icons-png.flaticon.com/512/3531/3531744.png',
-    description: 'Lightweight round sunglasses with tinted lenses. A must-have accessory for summer festivals.'
   },
   {
     name: 'Techwear Windbreaker',
