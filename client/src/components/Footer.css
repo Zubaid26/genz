@@ -21,10 +21,12 @@
   gap: 10px;
 }
 
-.footer-logo-icon {
-  background: var(--accent-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.footer-logo-img {
+  height: 64px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-bottom: 20px;
 }
 
 .footer-brand p {

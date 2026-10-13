@@ -9,7 +9,7 @@ export default function Footer() {
 
         {/* Brand Column */}
         <div className="footer-brand">
-          <h3><span className="footer-logo-icon">⚡</span> Gen-Z Threads</h3>
+          <img src="/logo.png" alt="Gen-Z Threads" className="footer-logo-img" />
           <p>Fashion that speaks your language. Curated streetwear, AI-powered try-on, and exclusive drops for the digital generation.</p>
           <div className="footer-socials">
             <a href="#" aria-label="Instagram"><FiInstagram /></a>

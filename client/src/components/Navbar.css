@@ -13,7 +13,10 @@
   text-decoration: none; letter-spacing: -0.5px; flex-shrink: 0;
   margin-right: auto;
 }
-.logo-icon { font-size: 1.5rem; }
+.nav-logo-img {
+  height: 48px; width: auto; object-fit: contain;
+  border-radius: 8px;
+}
 .nav-links {
   display: flex; align-items: center; gap: 16px; flex-shrink: 0;
 }

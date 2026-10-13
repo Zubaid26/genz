@@ -38,8 +38,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="nav-container">
         <Link to="/" className="nav-logo">
-          <span className="logo-icon">⚡</span>
-          <span>Gen-Z Threads</span>
+          <img src="/logo.png" alt="Gen-Z Threads" className="nav-logo-img" />
         </Link>
 
         <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
