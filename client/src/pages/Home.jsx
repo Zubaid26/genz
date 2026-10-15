@@ -135,111 +135,37 @@ export default function Home() {
 
   return (
     <div className="home-editorial">
-      {/* ─── HERO SECTION ─── */}
-      <section className="hero-editorial">
-        <div className="container hero-layout-grid">
-          <div className="hero-copy-column">
-            <div className="hero-badge-pill">
-              <span className="live-dot" />
-              <span>Fall/Winter Collection Live</span>
-            </div>
+      {/* ─── HERO SECTION (MATCHING REFERENCE DESIGN WITH FULL PICTURE) ─── */}
+      <section className="hero-ref-section">
+        <div className="hero-ref-media-layer">
+          <img
+            src="/hero-models.png"
+            alt="Gen-Z Threads Contemporary Collection"
+            className="hero-ref-backdrop-img"
+            loading="eager"
+          />
+          <div className="hero-ref-backdrop-gradient" aria-hidden="true" />
+        </div>
 
-            <h1 className="hero-display-title">
-              Contemporary Cuts.<br />
-              <span className="hero-title-highlight">Authentic Roots.</span>
+        <div className="container hero-ref-container">
+          <div className="hero-ref-content">
+            <span className="hero-ref-eyebrow">THE NEW STANDARD</span>
+            <h1 className="hero-ref-title">
+              Everyday,<br />
+              redefined.
             </h1>
-
-            <p className="hero-description">
-              Engineered for the modern wardrobe. Discover luxury shalwar kameez,
-              tailored kurtas, and oversized streetwear with instant AI Virtual Try-On.
+            <p className="hero-ref-subtitle">
+              Contemporary clothing. Authentic roots.
             </p>
-
-            <div className="hero-action-buttons">
-              <Link to="/products" className="btn-primary hero-btn-main">
-                <span>Explore Catalog</span>
+            <div className="hero-ref-actions">
+              <Link to="/products" className="hero-ref-cta-btn">
+                <span>Explore the collection</span>
                 <FiArrowRight />
               </Link>
-              <Link to="/tryon" className="btn-secondary hero-btn-sub">
+              <Link to="/tryon" className="hero-ref-tryon-btn">
                 <FiCamera />
-                <span>Launch Try-On</span>
+                <span>AI Try-On</span>
               </Link>
-            </div>
-
-            <div className="hero-metrics-row">
-              <div className="metric-cell">
-                <strong className="metric-number">{products.length > 0 ? `${products.length}+` : '50+'}</strong>
-                <span className="metric-label">Curated Styles</span>
-              </div>
-              <div className="metric-divider" />
-              <div className="metric-cell">
-                <strong className="metric-number">6</strong>
-                <span className="metric-label">Apparel Lines</span>
-              </div>
-              <div className="metric-divider" />
-              <div className="metric-cell">
-                <strong className="metric-number">Rs 2,500+</strong>
-                <span className="metric-label">Ships Free</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Hero Editorial Collage */}
-          <div className="hero-visual-column">
-            <div className="hero-collage-wrap">
-              {/* Primary Showcase Card */}
-              <div className="hero-main-card">
-                {heroPicks[0] ? (
-                  <Link to={`/products/${heroPicks[0]._id}`} className="hero-photo-link">
-                    <img
-                      src={heroPicks[0].image_url}
-                      alt={heroPicks[0].name}
-                      className="hero-main-img"
-                      loading="eager"
-                    />
-                    <div className="hero-photo-meta">
-                      <span className="hero-product-name">{heroPicks[0].name}</span>
-                      <span className="hero-product-price">{money(heroPicks[0].price)}</span>
-                    </div>
-                  </Link>
-                ) : (
-                  <div className="hero-fallback-card">
-                    <img src={img(HERO_FALLBACK[0], 700)} alt="New Season Feature" className="hero-main-img" />
-                    <div className="hero-photo-meta">
-                      <span className="hero-product-name">Signature Drop</span>
-                      <span className="hero-product-price">Rs 4,190</span>
-                    </div>
-                  </div>
-                )}
-                <div className="hero-studio-tag">
-                  <FiCamera /> AI Try-On Compatible
-                </div>
-              </div>
-
-              {/* Supporting Secondary Card */}
-              <div className="hero-sub-card">
-                {heroPicks[1] ? (
-                  <Link to={`/products/${heroPicks[1]._id}`} className="hero-sub-link">
-                    <img
-                      src={heroPicks[1].image_url}
-                      alt={heroPicks[1].name}
-                      className="hero-sub-img"
-                      loading="lazy"
-                    />
-                    <div className="hero-sub-meta">
-                      <span>{heroPicks[1].category}</span>
-                      <strong>{money(heroPicks[1].price)}</strong>
-                    </div>
-                  </Link>
-                ) : (
-                  <div className="hero-sub-link">
-                    <img src={img(HERO_FALLBACK[1], 500)} alt="Featured Look" className="hero-sub-img" />
-                    <div className="hero-sub-meta">
-                      <span>Oversized Fleece</span>
-                      <strong>Rs 2,990</strong>
-                    </div>
-                  </div>
-                )}
-              </div>
             </div>
           </div>
         </div>
