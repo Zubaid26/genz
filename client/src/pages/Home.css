@@ -1,6 +1,6 @@
 /* ── Editorial Homepage ── */
 .home-editorial {
-  padding-top: 72px; /* Navbar offset */
+  padding-top: 0;
   overflow-x: hidden;
 }
 
@@ -143,6 +143,7 @@
   width: 100%;
   display: flex;
   align-items: center;
+  padding-top: 75px;
 }
 
 .hero-ref-content {

@@ -17,10 +17,12 @@ export default function Navbar() {
   const location = useLocation();
 
   const [search, setSearch] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const dropdownRef = useRef(null);
+  const searchRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,15 +37,19 @@ export default function Navbar() {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropOpen(false);
       }
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setSearchOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Close mobile drawer on route change
+  // Close drawers/menus on route change
   useEffect(() => {
     setMenuOpen(false);
     setDropOpen(false);
+    setSearchOpen(false);
   }, [location.pathname]);
 
   const handleSearch = (e) => {
@@ -51,62 +57,105 @@ export default function Navbar() {
     if (search.trim()) {
       navigate(`/products?search=${encodeURIComponent(search.trim())}`);
       setSearch('');
+      setSearchOpen(false);
       setMenuOpen(false);
+    }
+  };
+
+  const handleScrollToAbout = (e) => {
+    if (location.pathname === '/') {
+      e.preventDefault();
+      const el = document.querySelector('.pillars-grid') || document.querySelector('.site-footer');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   return (
     <header className={`navbar-header ${scrolled ? 'is-scrolled' : ''}`}>
-      <div className="nav-container">
-        {/* Brand Logo */}
+      <div className="nav-floating-pill">
+        {/* Brand Logo matching reference */}
         <Link to="/" className="nav-logo" aria-label="Gen-Z Threads Home">
-          <div className="nav-logo-mark">
-            <img src="/logo.png" alt="Gen-Z Threads" className="nav-logo-img" />
-          </div>
           <div className="nav-logo-text-group">
             <span className="nav-brand-title">GEN-Z</span>
             <span className="nav-brand-sub">THREADS</span>
           </div>
         </Link>
 
-        {/* Global Search Bar (Desktop) */}
-        <form className="nav-search-form" onSubmit={handleSearch} role="search">
-          <FiSearch className="nav-search-icon" aria-hidden="true" />
-          <input
-            type="search"
-            name="search"
-            className="nav-search-input"
-            placeholder="Search kurtas, hoodies, baggy fits..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            aria-label="Search catalog"
-          />
-          {search && (
-            <button
-              type="button"
-              className="nav-search-clear"
-              onClick={() => setSearch('')}
-              aria-label="Clear search"
-            >
-              <FiX />
-            </button>
-          )}
-        </form>
-
-        {/* Desktop Navigation Links & Actions */}
-        <nav className="nav-desktop-actions" aria-label="Main Navigation">
-          <Link to="/products" className={`nav-link ${location.pathname === '/products' ? 'active' : ''}`}>
+        {/* Center Desktop Navigation Links */}
+        <nav className="nav-pill-links" aria-label="Main Navigation">
+          <Link
+            to="/products"
+            className={`nav-pill-link ${location.pathname === '/products' && !location.search ? 'active' : ''}`}
+          >
             Shop
           </Link>
-          <Link to="/tryon" className={`nav-tryon-pill ${location.pathname.startsWith('/tryon') ? 'active' : ''}`}>
-            <FiCamera className="tryon-icon" />
-            <span>AI Try-On</span>
+          <Link
+            to="/tryon"
+            className={`nav-pill-link tryon-nav-pill ${location.pathname.startsWith('/tryon') ? 'active' : ''}`}
+          >
+            <FiCamera className="tryon-camera-icon" /> Try On AI
           </Link>
+          <Link
+            to="/products"
+            className="nav-pill-link"
+          >
+            Collections
+          </Link>
+          <a
+            href="#about"
+            className="nav-pill-link"
+            onClick={handleScrollToAbout}
+          >
+            About
+          </a>
+        </nav>
 
-          {/* Theme Toggle */}
+        {/* Vertical Divider matching reference */}
+        <div className="nav-pill-divider" aria-hidden="true" />
+
+        {/* Right Action Controls */}
+        <div className="nav-pill-actions">
+          {/* Only Search Icon visible, opens search tab on click */}
+          <div className="nav-search-wrap" ref={searchRef}>
+            <button
+              type="button"
+              className={`nav-pill-icon-btn ${searchOpen ? 'active' : ''}`}
+              onClick={() => setSearchOpen(!searchOpen)}
+              title="Search catalog"
+              aria-label="Open search tab"
+              aria-expanded={searchOpen}
+            >
+              <FiSearch />
+            </button>
+
+            {searchOpen && (
+              <form className="nav-search-popover fade-in" onSubmit={handleSearch} role="search">
+                <FiSearch className="popover-search-icon" aria-hidden="true" />
+                <input
+                  type="search"
+                  autoFocus
+                  placeholder="Search kurtas, hoodies, fits..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="popover-search-input"
+                  aria-label="Search catalog"
+                />
+                <button
+                  type="button"
+                  className="popover-close-btn"
+                  onClick={() => setSearchOpen(false)}
+                  aria-label="Close search"
+                >
+                  <FiX />
+                </button>
+              </form>
+            )}
+          </div>
+
+          {/* Theme Toggle Button */}
           <button
             type="button"
-            className="nav-icon-btn theme-toggle-btn"
+            className="nav-pill-icon-btn theme-toggle-btn"
             onClick={toggleTheme}
             title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
             aria-label="Toggle visual theme"
@@ -117,15 +166,17 @@ export default function Navbar() {
           {/* Cart Icon */}
           <Link
             to="/cart"
-            className="nav-icon-btn cart-nav-btn"
+            className="nav-pill-icon-btn cart-nav-btn"
             title="Shopping Cart"
             aria-label={`Shopping Cart with ${cartCount || 0} items`}
           >
             <FiShoppingCart />
-            {cartCount > 0 && <span className="nav-cart-badge">{cartCount > 99 ? '99+' : cartCount}</span>}
+            {cartCount > 0 && (
+              <span className="nav-pill-cart-badge">{cartCount > 99 ? '99+' : cartCount}</span>
+            )}
           </Link>
 
-          {/* User Account / Dropdown */}
+          {/* Sign In Button / User Account Trigger */}
           {user ? (
             <div className="user-dropdown-wrap" ref={dropdownRef}>
               <button
@@ -179,12 +230,12 @@ export default function Navbar() {
               )}
             </div>
           ) : (
-            <Link to="/login" className="nav-login-cta">
+            <Link to="/login" className="nav-pill-signin-btn">
               Sign In
             </Link>
           )}
 
-          {/* Mobile Menu Toggle Button */}
+          {/* Mobile Hamburger Button */}
           <button
             type="button"
             className="mobile-hamburger-btn"
@@ -194,7 +245,7 @@ export default function Navbar() {
           >
             {menuOpen ? <FiX /> : <FiMenu />}
           </button>
-        </nav>
+        </div>
       </div>
 
       {/* Mobile Drawer Navigation */}
@@ -230,8 +281,14 @@ export default function Navbar() {
                 Shop Catalog
               </Link>
               <Link to="/tryon" className="mobile-nav-link highlight" onClick={() => setMenuOpen(false)}>
-                <FiCamera /> Virtual Try-On Studio
+                <FiCamera /> Try On AI
               </Link>
+              <Link to="/products" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
+                Collections
+              </Link>
+              <a href="#about" className="mobile-nav-link" onClick={(e) => { handleScrollToAbout(e); setMenuOpen(false); }}>
+                About
+              </a>
               <Link to="/cart" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
                 <FiShoppingCart /> Cart ({cartCount})
               </Link>
