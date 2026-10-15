@@ -96,8 +96,8 @@ export default function Navbar() {
             <FiCamera className="tryon-camera-icon" /> Try On AI
           </Link>
           <Link
-            to="/products"
-            className="nav-pill-link"
+            to="/collections"
+            className={`nav-pill-link ${location.pathname === '/collections' ? 'active' : ''}`}
           >
             Collections
           </Link>
@@ -283,7 +283,7 @@ export default function Navbar() {
               <Link to="/tryon" className="mobile-nav-link highlight" onClick={() => setMenuOpen(false)}>
                 <FiCamera /> Try On AI
               </Link>
-              <Link to="/products" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
+              <Link to="/collections" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
                 Collections
               </Link>
               <a href="#about" className="mobile-nav-link" onClick={(e) => { handleScrollToAbout(e); setMenuOpen(false); }}>
