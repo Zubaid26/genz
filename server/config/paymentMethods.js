@@ -18,6 +18,12 @@ const normalizeCnic = (raw) => {
   return digits.length >= 6 ? digits.slice(-6) : null;
 };
 
+/** Strips spaces/dashes from a card number and validates it's 13-19 digits (ISO/IEC 7812). */
+const normalizeCard = (raw) => {
+  const digits = String(raw || '').replace(/\D/g, '');
+  return digits.length >= 13 && digits.length <= 19 ? digits : null;
+};
+
 /**
  * Registry of supported payment methods. Adding a gateway here makes it appear
  * in the checkout UI and pass server-side validation automatically.
@@ -41,6 +47,15 @@ const METHODS = [
     requiresPayment: true,
     fields: ['mobile'],
     isAvailable: () => isAvailable('easypaisa')
+  },
+  {
+    id: 'card',
+    label: 'Credit / Debit Card',
+    description: 'Pay securely with Visa, Mastercard, or UnionPay.',
+    provider: 'card',
+    requiresPayment: true,
+    fields: ['cardNumber', 'expiry', 'cvv', 'cardName'],
+    isAvailable: () => isAvailable('card')
   },
   {
     id: 'cod',
@@ -69,4 +84,4 @@ const publicMethods = () =>
     sandbox: requiresPayment && isSandbox(provider)
   }));
 
-module.exports = { METHODS, availableMethods, findMethod, normalizeCnic, normalizeMobile, publicMethods };
+module.exports = { METHODS, availableMethods, findMethod, normalizeCard, normalizeCnic, normalizeMobile, publicMethods };

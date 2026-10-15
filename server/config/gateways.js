@@ -39,6 +39,16 @@ const GATEWAYS = {
           'https://easypay.easypaisa.com.pk/easypay-service/rest/v4/initiate-ma-transaction'
       };
     }
+  },
+  card: {
+    label: 'Credit / Debit Card',
+    env: ['STRIPE_SECRET_KEY'],
+    get config() {
+      return {
+        secretKey: value('STRIPE_SECRET_KEY'),
+        publicKey: value('STRIPE_PUBLIC_KEY')
+      };
+    }
   }
 };
 

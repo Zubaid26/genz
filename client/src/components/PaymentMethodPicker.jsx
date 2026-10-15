@@ -1,9 +1,10 @@
-import { FiSmartphone, FiTruck, FiCheck } from 'react-icons/fi';
+import { FiSmartphone, FiTruck, FiCheck, FiCreditCard } from 'react-icons/fi';
 import './PaymentMethodPicker.css';
 
 const ICONS = {
   jazzcash: FiSmartphone,
   easypaisa: FiSmartphone,
+  card: FiCreditCard,
   cod: FiTruck
 };
 

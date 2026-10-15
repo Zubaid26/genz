@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   FiLock, FiAlertCircle, FiTruck, FiLoader, FiSmartphone,
-  FiArrowLeft, FiShield, FiCheckCircle
+  FiArrowLeft, FiShield, FiCheckCircle, FiCreditCard
 } from 'react-icons/fi';
 import useCart from '../hooks/useCart';
 import API from '../utils/axiosInstance';
@@ -35,6 +35,7 @@ export default function Checkout() {
 
   const [form, setForm] = useState(EMPTY_ADDRESS);
   const [wallet, setWallet] = useState({ mobile: '', cnic: '' });
+  const [card, setCard] = useState({ cardNumber: '', expiry: '', cvv: '', cardName: '' });
   const [methods, setMethods] = useState([]);
   const [selected, setSelected] = useState('');
   const [loadingMethods, setLoadingMethods] = useState(true);
@@ -42,6 +43,17 @@ export default function Checkout() {
 
   const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   const handleWallet = (e) => setWallet((w) => ({ ...w, [e.target.name]: e.target.value }));
+  const handleCard = (e) => {
+    let { name, value } = e.target;
+    if (name === 'cardNumber') {
+      value = value.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ').slice(0, 19);
+    } else if (name === 'expiry') {
+      value = value.replace(/\D/g, '').replace(/(\d{2})(?=\d)/, '$1/').slice(0, 5);
+    } else if (name === 'cvv') {
+      value = value.replace(/\D/g, '').slice(0, 4);
+    }
+    setCard((c) => ({ ...c, [name]: value }));
+  };
 
   const selectedMethod = methods.find((m) => m.id === selected) || null;
   const isEmpty = !cart.items || cart.items.length === 0;
@@ -81,7 +93,7 @@ export default function Checkout() {
     const addressProblem = validateAddress(form);
     if (addressProblem) { toast.error(addressProblem); return; }
 
-    if (selectedMethod.requiresPayment) {
+    if (selectedMethod.requiresPayment && selectedMethod.id !== 'card') {
       if (!isValidMobile(wallet.mobile)) {
         toast.error('Enter a valid mobile number, e.g. 0300 1234567.');
         return;
@@ -92,11 +104,36 @@ export default function Checkout() {
       }
     }
 
+    if (selectedMethod.id === 'card') {
+      const digits = card.cardNumber.replace(/\D/g, '');
+      if (digits.length < 13 || digits.length > 19) {
+        toast.error('Enter a valid card number.'); return;
+      }
+      if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(card.expiry)) {
+        toast.error('Enter a valid expiry date (MM/YY).'); return;
+      }
+      if (card.cvv.length < 3) {
+        toast.error('Enter a valid CVV.'); return;
+      }
+      if (!card.cardName.trim()) {
+        toast.error('Enter the name on your card.'); return;
+      }
+    }
+
     setBusy(true);
     try {
       let payment = null;
 
-      if (selectedMethod.requiresPayment) {
+      if (selectedMethod.id === 'card') {
+        const res = await API.post('/payment/initiate', {
+          method: 'card',
+          cardNumber: card.cardNumber.replace(/\s/g, ''),
+          expiry: card.expiry,
+          cvv: card.cvv,
+          cardName: card.cardName
+        });
+        payment = res.data;
+      } else if (selectedMethod.requiresPayment) {
         const res = await API.post('/payment/initiate', {
           method: selectedMethod.id,
           mobile: wallet.mobile,
@@ -150,6 +187,88 @@ export default function Checkout() {
       );
     }
 
+    // ── Card fields ───────────────────────────────────────────────
+    if (selectedMethod.id === 'card') {
+      return (
+        <div className="wallet-input-container">
+          {selectedMethod.sandbox && (
+            <div className="checkout-pay-notice sandbox-box">
+              <FiAlertCircle className="notice-icon" />
+              <div>
+                <strong>Sandbox Testing Mode Active</strong>
+                <p>No real charge will be made. You can test with any valid card format.</p>
+              </div>
+            </div>
+          )}
+          <div className="wallet-fields-grid">
+            <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+              <label htmlFor="cardNumber">Card Number *</label>
+              <input
+                id="cardNumber"
+                name="cardNumber"
+                type="text"
+                inputMode="numeric"
+                value={card.cardNumber}
+                onChange={handleCard}
+                autoComplete="cc-number"
+                placeholder="4242 4242 4242 4242"
+                maxLength={19}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="cardName">Name on Card *</label>
+              <input
+                id="cardName"
+                name="cardName"
+                type="text"
+                value={card.cardName}
+                onChange={handleCard}
+                autoComplete="cc-name"
+                placeholder="Ahmed Khan"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="expiry">Expiry Date *</label>
+              <input
+                id="expiry"
+                name="expiry"
+                type="text"
+                inputMode="numeric"
+                value={card.expiry}
+                onChange={handleCard}
+                autoComplete="cc-exp"
+                placeholder="MM/YY"
+                maxLength={5}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="cvv">CVV *</label>
+              <input
+                id="cvv"
+                name="cvv"
+                type="password"
+                inputMode="numeric"
+                value={card.cvv}
+                onChange={handleCard}
+                autoComplete="cc-csc"
+                placeholder="•••"
+                maxLength={4}
+                required
+              />
+            </div>
+          </div>
+          <p className="wallet-prompt-note">
+            <FiCreditCard />
+            <span>Your card will be charged <strong>{money(cart.total)}</strong>. Transaction is SSL encrypted and PCI-DSS compliant.</span>
+          </p>
+        </div>
+      );
+    }
+
+    // ── Wallet fields (JazzCash / Easypaisa) ──────────────────────
     return (
       <div className="wallet-input-container">
         {selectedMethod.sandbox && (
