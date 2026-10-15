@@ -70,6 +70,28 @@ const OrderSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  // Merchant account details receiving payment
+  merchant_account_name: {
+    type: String,
+    default: ''
+  },
+  merchant_account_number: {
+    type: String,
+    default: ''
+  },
+  // Customer payment verification
+  customer_mobile: {
+    type: String,
+    default: ''
+  },
+  transaction_id: {
+    type: String,
+    default: ''
+  },
+  payment_receipt: {
+    type: String,
+    default: ''
+  },
   // Deprecated: Stripe intent id kept so historical orders still render.
   payment_intent_id: {
     type: String,

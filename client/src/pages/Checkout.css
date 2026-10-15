@@ -201,7 +201,295 @@
 
 /* Wallet Input Fields */
 .wallet-input-container {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+}
+
+/* ── Merchant Details Card ── */
+.merchant-details-card {
+  padding: 20px 22px;
+  border-radius: var(--radius-lg);
+  background: var(--card-bg-elevated);
+  border: 1px solid var(--card-border);
+  margin-bottom: 22px;
+  position: relative;
+  overflow: hidden;
+}
+
+.merchant-details-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-secondary), var(--text-color));
+}
+
+.merchant-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.merchant-badge-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.merchant-card-badge {
+  font-family: var(--font-display);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--brand-pill-bg);
+  color: var(--brand-pill-text);
+}
+
+.merchant-card-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.merchant-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 14px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: var(--input-bg);
+  border: 1px solid var(--card-border);
+}
+
+.merchant-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.merchant-detail-label {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.merchant-detail-value {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--text-color);
+  word-break: break-word;
+}
+
+.merchant-number-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.highlight-number {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  color: var(--text-color);
+}
+
+.merchant-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--card-bg-elevated);
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+  font-size: 0.75rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.merchant-copy-btn:hover {
+  background: var(--text-color);
+  color: var(--bg-color);
+  border-color: var(--text-color);
+  transform: translateY(-1px);
+}
+
+.merchant-copy-btn.copied {
+  background: var(--success-subtle);
+  color: var(--success);
+  border-color: var(--success);
+}
+
+.merchant-transfer-instruction {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.merchant-transfer-instruction strong {
+  color: var(--text-color);
+}
+
+/* ── Field Micro-Labels & Helpers ── */
+.field-optional-tag {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+.field-required-star {
+  color: var(--error, #e53e3e);
+  font-weight: 800;
+  margin-left: 2px;
+}
+
+.form-field-helper {
+  display: block;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-top: 5px;
+}
+
+/* ── Receipt Upload Area ── */
+.receipt-upload-group {
+  margin-bottom: 18px;
+}
+
+.receipt-dropzone {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border: 1.5px dashed var(--card-border);
+  border-radius: var(--radius-md);
+  background: var(--input-bg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.receipt-dropzone:hover {
+  border-color: var(--text-color);
+  background: var(--card-bg-elevated);
+}
+
+.dropzone-icon {
+  font-size: 1.6rem;
+  color: var(--accent-secondary);
+  flex-shrink: 0;
+}
+
+.dropzone-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dropzone-cta {
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.dropzone-specs {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+/* Receipt Preview Card */
+.receipt-preview-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: var(--card-bg-elevated);
+  border: 1px solid var(--card-border);
+}
+
+.receipt-preview-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--input-bg);
+  border: 1px solid var(--card-border);
+  flex-shrink: 0;
+}
+
+.receipt-preview-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.receipt-preview-meta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.receipt-file-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--success);
+}
+
+.receipt-check-icon {
+  font-size: 0.85rem;
+}
+
+.receipt-file-name {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.receipt-remove-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.receipt-remove-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--error, #ef4444);
+  border-color: var(--error, #ef4444);
 }
 
 .wallet-fields-grid {
@@ -222,6 +510,13 @@
 
 .wallet-prompt-note svg {
   color: var(--accent-secondary);
+}
+
+@media (max-width: 600px) {
+  .merchant-card-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
 }
 
 /* Submit CTA */

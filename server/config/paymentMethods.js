@@ -50,19 +50,23 @@ const METHODS = [
   {
     id: 'jazzcash',
     label: 'JazzCash',
-    description: 'Pay from your JazzCash mobile wallet.',
+    description: 'Pay to our verified JazzCash merchant account.',
     provider: 'jazzcash',
     requiresPayment: true,
-    fields: ['mobile', 'cnic'],
+    merchantName: process.env.JAZZCASH_MERCHANT_NAME || 'Gen-Z Threads / Muhammad Zubaid',
+    merchantNumber: process.env.JAZZCASH_MERCHANT_NUMBER || '0300 1234567',
+    fields: ['merchantName', 'merchantNumber', 'customerMobile', 'transactionId', 'receipt'],
     isAvailable: () => true
   },
   {
     id: 'easypaisa',
     label: 'Easypaisa',
-    description: 'Pay from your Easypaisa mobile account.',
+    description: 'Pay to our verified Easypaisa merchant account.',
     provider: 'easypaisa',
     requiresPayment: true,
-    fields: ['mobile'],
+    merchantName: process.env.EASYPAISA_MERCHANT_NAME || 'Gen-Z Threads / Muhammad Zubaid',
+    merchantNumber: process.env.EASYPAISA_MERCHANT_NUMBER || '0345 1234567',
+    fields: ['merchantName', 'merchantNumber', 'customerMobile', 'transactionId', 'receipt'],
     isAvailable: () => true
   }
 ];
@@ -73,13 +77,15 @@ const findMethod = (id) => availableMethods().find((m) => m.id === id) || null;
 
 // Shape sent to the browser — never leaks the isAvailable predicate.
 const publicMethods = () =>
-  availableMethods().map(({ id, label, description, provider, requiresPayment, fields }) => ({
+  availableMethods().map(({ id, label, description, provider, requiresPayment, fields, merchantName, merchantNumber }) => ({
     id,
     label,
     description,
     provider,
     requiresPayment,
     fields,
+    merchantName: merchantName || '',
+    merchantNumber: merchantNumber || '',
     sandbox: requiresPayment && isSandbox(provider)
   }));
 

@@ -105,7 +105,12 @@ exports.placeOrder = async (req, res) => {
       payment_method: method.id,
       payment_status: paymentStatus,
       payment_reference: method.requiresPayment ? payment_reference : '',
-      payer_mobile: method.requiresPayment ? (normalizeMobile(req.body.payer_mobile) || '') : '',
+      payer_mobile: method.requiresPayment ? (normalizeMobile(req.body.customer_mobile || req.body.payer_mobile) || req.body.customer_mobile || '') : '',
+      merchant_account_name: req.body.merchant_account_name || method.merchantName || '',
+      merchant_account_number: req.body.merchant_account_number || method.merchantNumber || '',
+      customer_mobile: req.body.customer_mobile ? (normalizeMobile(req.body.customer_mobile) || req.body.customer_mobile) : '',
+      transaction_id: req.body.transaction_id || '',
+      payment_receipt: req.body.payment_receipt || '',
       shipping_address: address,
       status: 'Placed',
       status_history: [{ status: 'Placed', at: new Date() }]

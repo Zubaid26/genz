@@ -106,6 +106,40 @@ export default function OrderConfirmation() {
             </span>
           </div>
 
+          {order.transaction_id && (
+            <div className="confirm-detail-row">
+              <span className="detail-prop">Transaction ID / Ref</span>
+              <strong style={{ fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.05em' }}>
+                {order.transaction_id}
+              </strong>
+            </div>
+          )}
+
+          {order.merchant_account_number && (
+            <div className="confirm-detail-row">
+              <span className="detail-prop">Merchant Account</span>
+              <span style={{ fontSize: '0.86rem', color: 'var(--text-color)' }}>
+                {order.merchant_account_name ? `${order.merchant_account_name} · ` : ''}<strong>{order.merchant_account_number}</strong>
+              </span>
+            </div>
+          )}
+
+          {order.customer_mobile && (
+            <div className="confirm-detail-row">
+              <span className="detail-prop">Customer Mobile</span>
+              <span style={{ fontSize: '0.86rem' }}>{order.customer_mobile}</span>
+            </div>
+          )}
+
+          {order.payment_receipt && (
+            <div className="confirm-detail-row">
+              <span className="detail-prop">Payment Receipt</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem', color: 'var(--success)', fontWeight: '600' }}>
+                <FiCheckCircle /> Attached
+              </span>
+            </div>
+          )}
+
           <div className="confirm-detail-row">
             <span className="detail-prop">Total Charged</span>
             <span className="confirm-total-val">{money(order.total_price)}</span>

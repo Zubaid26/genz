@@ -122,34 +122,38 @@ exports.initiatePayment = async (req, res) => {
     }
 
     // ── Wallet payments (JazzCash / Easypaisa) ────────────────────
-    const mobile = normalizeMobile(req.body.mobile);
-    if (!mobile) {
-      return res.status(400).json({ message: 'Enter a valid mobile number, e.g. 0300 1234567.' });
+    const transactionId = String(req.body.transactionId || '').trim();
+    if (!transactionId) {
+      return res.status(400).json({ message: 'Transaction ID / Reference Number is required.' });
     }
 
-    let cnic = null;
-    if (method.fields.includes('cnic')) {
-      cnic = normalizeCnic(req.body.cnic);
-      if (!cnic) {
-        return res.status(400).json({ message: 'Enter the last 6 digits of your CNIC.' });
+    const rawMobile = req.body.customerMobile || req.body.mobile;
+    let mobile = '';
+    if (rawMobile && String(rawMobile).trim()) {
+      mobile = normalizeMobile(rawMobile);
+      if (!mobile) {
+        return res.status(400).json({ message: 'Enter a valid customer mobile number, e.g. 0300 1234567.' });
       }
     }
 
-    // Sandbox: no merchant account needed, so checkout stays fully testable.
-    if (isSandbox(method.provider)) {
+    // Sandbox / Direct manual merchant transfer mode:
+    if (isSandbox(method.provider) || !isLive(method.provider)) {
       return res.json({
         reference,
         signature: signReference(reference, req.user._id, amountMinor),
         amount: total,
         currency: CURRENCY,
         mobile,
-        sandbox: true,
-        message: `Sandbox: a real ${method.label} prompt would be sent to ${mobile}.`
+        transactionId,
+        merchantAccountName: method.merchantName,
+        merchantAccountNumber: method.merchantNumber,
+        sandbox: isSandbox(method.provider),
+        message: `Payment initiated for ${method.label}. Transaction ID: ${transactionId}`
       });
     }
 
     const result = method.id === 'jazzcash'
-      ? await jazzcash.chargeWallet({ reference, amountMinor, mobile, cnic, description })
+      ? await jazzcash.chargeWallet({ reference, amountMinor, mobile, description })
       : await easypaisa.chargeMobileAccount({ reference, amount: total, mobile, email: req.user.email, description });
 
     if (!result.ok) {
@@ -162,6 +166,9 @@ exports.initiatePayment = async (req, res) => {
       amount: total,
       currency: CURRENCY,
       mobile,
+      transactionId,
+      merchantAccountName: method.merchantName,
+      merchantAccountNumber: method.merchantNumber,
       sandbox: false
     });
   } catch (error) {
