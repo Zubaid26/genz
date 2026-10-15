@@ -13,7 +13,6 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ProductCatalog from './pages/ProductCatalog';
 import ProductDetail from './pages/ProductDetail';
-import TryOn from './pages/TryOn';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import OrderConfirmation from './pages/OrderConfirmation';
@@ -60,8 +59,6 @@ function AppShell() {
         <Route path="/products/:id" element={<ProductDetail />} />
 
         {/* Protected Routes */}
-        <Route path="/tryon" element={<ProtectedRoute><TryOn /></ProtectedRoute>} />
-        <Route path="/tryon/:id" element={<ProtectedRoute><TryOn /></ProtectedRoute>} />
         <Route path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
         <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
         <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />

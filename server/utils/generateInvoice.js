@@ -1,5 +1,15 @@
 const PDFDocument = require('pdfkit');
 
+// Matches the storefront's formatting: Rs 3,490 (paisa only when non-zero).
+const money = (amount) => {
+  const n = Number(amount) || 0;
+  const hasPaisa = Math.round(n * 100) % 100 !== 0;
+  return `Rs ${n.toLocaleString('en-PK', {
+    minimumFractionDigits: hasPaisa ? 2 : 0,
+    maximumFractionDigits: 2
+  })}`;
+};
+
 // Generate a PDF invoice for an order
 const generateInvoice = (order, user) => {
   return new Promise((resolve, reject) => {
@@ -48,17 +58,31 @@ const generateInvoice = (order, user) => {
         const startY = doc.y;
         doc.text(name, 50, startY, { width: 200 });
         doc.text(String(item.quantity), 260, startY, { width: 60, align: 'center' });
-        doc.text(`$${item.price.toFixed(2)}`, 330, startY, { width: 80, align: 'right' });
-        doc.text(`$${(item.price * item.quantity).toFixed(2)}`, 420, startY, { width: 80, align: 'right' });
+        doc.text(money(item.price), 330, startY, { width: 80, align: 'right' });
+        doc.text(money(item.price * item.quantity), 420, startY, { width: 80, align: 'right' });
         doc.moveDown(0.5);
       });
 
-      // Total
+      // Totals
       doc.moveDown();
       doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke('#333');
       doc.moveDown(0.5);
+
+      // Fall back to the line-item sum for older orders saved without a subtotal.
+      const subtotal = typeof order.subtotal === 'number' && order.subtotal > 0
+        ? order.subtotal
+        : order.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+      const discount = order.discount || 0;
+
+      doc.fontSize(10).font('Helvetica');
+      doc.text(`Subtotal: ${money(subtotal)}`, { align: 'right' });
+      if (discount > 0) {
+        const label = order.coupon_code ? `Discount (${order.coupon_code})` : 'Discount';
+        doc.text(`${label}: -${money(discount)}`, { align: 'right' });
+      }
+      doc.moveDown(0.3);
       doc.fontSize(14).font('Helvetica-Bold');
-      doc.text(`Total: $${order.total_price.toFixed(2)}`, { align: 'right' });
+      doc.text(`Total: ${money(order.total_price)}`, { align: 'right' });
 
       // Footer
       doc.moveDown(2);

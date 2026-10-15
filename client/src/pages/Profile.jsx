@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FiUser, FiMail, FiSave } from 'react-icons/fi';
+import { FiUser, FiMail, FiCheck, FiShield, FiCalendar } from 'react-icons/fi';
 import useAuth from '../hooks/useAuth';
 import API from '../utils/axiosInstance';
 import toast from 'react-hot-toast';
@@ -12,10 +12,9 @@ export default function Profile() {
   const [loading, setLoading] = useState(false);
   const [joined, setJoined] = useState(user?.created_at || null);
 
-  // The login response does not include the signup date, so load the full profile for it
   useEffect(() => {
     API.get('/auth/profile')
-      .then(res => setJoined(res.data.created_at))
+      .then((res) => setJoined(res.data.created_at))
       .catch(() => {});
   }, []);
 
@@ -25,34 +24,77 @@ export default function Profile() {
     try {
       const res = await API.put('/auth/profile', { full_name: name, email });
       updateUser(res.data.user);
-      toast.success('Profile updated!');
+      toast.success('Profile details saved successfully!');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Update failed');
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
 
+  const initial = user?.full_name?.charAt(0)?.toUpperCase() || 'U';
+  const joinDate = joined
+    ? new Date(joined).toLocaleDateString('en-PK', { year: 'numeric', month: 'long', day: 'numeric' })
+    : null;
+
   return (
-    <div className="profile-page container">
-      <div className="profile-card">
-        <div className="profile-avatar">
-          <span>{user?.full_name?.charAt(0)?.toUpperCase()}</span>
+    <div className="profile-editorial-page container">
+      <div className="profile-center-card">
+        {/* Profile Avatar & Header */}
+        <div className="profile-avatar-banner">
+          <div className="profile-large-circle">
+            {initial}
+          </div>
+          <div className="profile-headline-group">
+            <h1 className="profile-name-title">{user?.full_name || 'My Profile'}</h1>
+            <div className="profile-badge-row">
+              <span className={`profile-role-pill ${user?.role === 'admin' ? 'admin' : ''}`}>
+                <FiShield /> {user?.role === 'admin' ? 'Store Administrator' : 'Verified Member'}
+              </span>
+              {joinDate && (
+                <span className="profile-joined-text">
+                  <FiCalendar /> Joined {joinDate}
+                </span>
+              )}
+            </div>
+          </div>
         </div>
-        <h1>My Profile</h1>
-        <p className="role-badge">{user?.role}</p>
-        <form onSubmit={handleSubmit}>
-          <div className="input-group">
-            <FiUser className="input-icon" />
-            <input value={name} onChange={e => setName(e.target.value)} placeholder="Full Name" required />
+
+        {/* Edit Form */}
+        <form onSubmit={handleSubmit} className="profile-form-body">
+          <div className="form-group">
+            <label htmlFor="full_name">Full Legal Name</label>
+            <div className="profile-input-wrap">
+              <FiUser className="input-affix-icon" />
+              <input
+                id="full_name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Full Name"
+                required
+              />
+            </div>
           </div>
-          <div className="input-group">
-            <FiMail className="input-icon" />
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" required />
+
+          <div className="form-group">
+            <label htmlFor="profile_email">Email Address</label>
+            <div className="profile-input-wrap">
+              <FiMail className="input-affix-icon" />
+              <input
+                id="profile_email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email Address"
+                required
+              />
+            </div>
           </div>
-          <button type="submit" className="save-btn" disabled={loading}>
-            {loading ? 'Saving...' : <><FiSave /> Save Changes</>}
+
+          <button type="submit" className="btn-primary profile-save-btn" disabled={loading}>
+            {loading ? 'Saving Changes…' : <><FiCheck /> Save Profile Changes</>}
           </button>
         </form>
-        {joined && <p className="joined">Member since {new Date(joined).toLocaleDateString()}</p>}
       </div>
     </div>
   );

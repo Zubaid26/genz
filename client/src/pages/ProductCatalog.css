@@ -1,35 +1,318 @@
-.catalog-page {
-  padding-top: 100px;
-  padding-bottom: 60px;
+/* ── Product Catalog Page ── */
+.catalog-editorial {
+  padding-top: 104px;
+  padding-bottom: 80px;
 }
-.catalog-header {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 24px; flex-wrap: wrap; gap: 16px;
+
+/* ── Header Block ── */
+.catalog-header-block {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
 }
-.catalog-header h1 { color: var(--text-color); font-size: 2rem; }
-.catalog-search {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--input-bg); border: 1px solid var(--card-border);
-  border-radius: 12px; padding: 10px 16px; min-width: 280px;
+
+.catalog-title-col {
+  max-width: 600px;
+}
+
+.catalog-main-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-color);
+  line-height: 1.15;
+  margin-bottom: 6px;
+}
+
+.catalog-count-caption {
+  font-size: 0.9rem;
   color: var(--text-muted);
 }
-.catalog-search input {
-  background: none; border: none; color: var(--text-color); outline: none; flex: 1; font-size: 0.9rem;
+
+/* Search Bar */
+.catalog-search-bar {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  align-items: center;
 }
-.catalog-search input::placeholder { color: var(--text-muted); }
-.catalog-filters {
-  display: flex; align-items: center; gap: 10px; margin-bottom: 32px;
-  overflow-x: auto; padding-bottom: 8px; color: var(--text-muted);
+
+.catalog-search-icon {
+  position: absolute;
+  left: 14px;
+  font-size: 1rem;
+  color: var(--text-muted);
+  pointer-events: none;
 }
-.filter-btn {
-  padding: 10px 22px; border-radius: 50px; border: 1.5px solid var(--card-border);
-  background: var(--card-bg); color: var(--text-color); cursor: pointer;
-  font-size: 0.9rem; font-weight: 600; white-space: nowrap; transition: all 0.2s;
+
+.catalog-search-bar input {
+  width: 100%;
+  height: 44px;
+  padding: 0 36px 0 40px;
+  border-radius: var(--radius-full);
+  background: var(--input-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+  font-size: 0.88rem;
+  outline: none;
+  transition: all var(--transition-fast);
 }
-.filter-btn:hover { border-color: var(--accent-primary); transform: translateY(-2px); }
-.filter-btn.active {
-  background: var(--accent-gradient);
-  color: #fff; border-color: transparent;
-  box-shadow: 0 4px 12px var(--shadow-color);
+
+.catalog-search-bar input:focus {
+  border-color: var(--text-color);
+  background: var(--card-bg);
+  box-shadow: 0 0 0 3px var(--accent-secondary-subtle);
 }
-.empty-state { text-align: center; padding: 80px 0; color: var(--text-muted); font-size: 1.1rem; }
+
+.catalog-search-clear {
+  position: absolute;
+  right: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+/* ── Toolbar & Category Tabs ── */
+.catalog-toolbar-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--card-border);
+  flex-wrap: wrap;
+}
+
+.catalog-category-scroller {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+
+.catalog-category-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.category-pill-btn {
+  padding: 9px 18px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.category-pill-btn:hover {
+  border-color: var(--text-color);
+  color: var(--text-color);
+  background: var(--card-bg-elevated);
+}
+
+.category-pill-btn.is-active {
+  background: var(--brand-pill-bg);
+  color: var(--brand-pill-text);
+  border-color: var(--brand-pill-bg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Right Controls (In-stock & Sort) */
+.catalog-controls-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.catalog-stock-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  font-family: var(--font-display);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.catalog-stock-toggle:hover {
+  border-color: var(--card-border-hover);
+}
+
+.catalog-stock-toggle.is-active {
+  border-color: var(--text-color);
+  background: var(--card-bg-elevated);
+}
+
+.checkbox-box {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1.5px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+}
+
+.catalog-stock-toggle.is-active .checkbox-box {
+  background: var(--text-color);
+  border-color: var(--text-color);
+  color: var(--bg-color);
+}
+
+.catalog-sort-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.sort-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.catalog-sort-select {
+  height: 40px;
+  padding: 0 16px 0 34px;
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+  font-family: var(--font-display);
+  font-size: 0.84rem;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.catalog-sort-select:hover {
+  border-color: var(--card-border-hover);
+}
+
+.catalog-sort-select:focus {
+  border-color: var(--text-color);
+}
+
+/* ── Active Filter Badges ── */
+.active-filters-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.active-filters-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--card-bg-elevated);
+  border: 1px solid var(--card-border);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.filter-chip button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.filter-chip button:hover {
+  color: var(--text-color);
+}
+
+.clear-all-filters-btn {
+  font-size: 0.8rem;
+  color: var(--accent-secondary);
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+/* ── Empty State ── */
+.catalog-empty-state {
+  text-align: center;
+  padding: 80px 24px;
+  background: var(--card-bg);
+  border: 1px dashed var(--card-border);
+  border-radius: var(--radius-xl);
+  max-width: 560px;
+  margin: 40px auto;
+}
+
+.empty-state-icon {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+
+.catalog-empty-state h3 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-color);
+  margin-bottom: 8px;
+}
+
+.catalog-empty-state p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+/* ── Responsive Queries ── */
+@media (max-width: 768px) {
+  .catalog-editorial {
+    padding-top: 88px;
+  }
+
+  .catalog-header-block {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .catalog-search-bar {
+    max-width: 100%;
+  }
+
+  .catalog-main-title {
+    font-size: 2rem;
+  }
+}

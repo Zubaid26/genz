@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
+import { FiMail, FiLock, FiLogIn, FiArrowRight } from 'react-icons/fi';
 import useAuth from '../hooks/useAuth';
 import toast from 'react-hot-toast';
 import './Auth.css';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Pick the most useful message out of an API error response
 const apiMessage = (err, fallback) =>
   err.response?.data?.message || err.response?.data?.errors?.[0]?.msg || fallback;
 
@@ -38,39 +37,69 @@ export default function Login() {
       navigate('/');
     } catch (err) {
       toast.error(apiMessage(err, 'Login failed'));
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <div className="auth-header">
-          <span className="auth-icon">⚡</span>
-          <h1>Welcome Back</h1>
-          <p>Sign in to your Gen-Z Threads account</p>
+    <div className="auth-editorial-page">
+      <div className="auth-editorial-card">
+        <div className="auth-brand-badge">
+          <img src="/logo.png" alt="Gen-Z Threads" className="auth-logo-img" />
+          <span className="auth-brand-word">GEN-Z THREADS</span>
         </div>
-        <form onSubmit={handleSubmit} noValidate>
-          <div className="input-group">
-            <FiMail className="input-icon" />
-            <input type="email" placeholder="Email address" value={email}
-              className={errors.email ? 'invalid' : ''} aria-invalid={!!errors.email}
-              onChange={e => setEmail(e.target.value)} />
+
+        <div className="auth-header-block">
+          <h1 className="auth-title">Welcome Back</h1>
+          <p className="auth-sub">Sign in to access your bag, orders, and virtual fitting room.</p>
+        </div>
+
+        <form onSubmit={handleSubmit} noValidate className="auth-form-body">
+          <div className="auth-field">
+            <label htmlFor="login-email">Email Address</label>
+            <div className="auth-input-container">
+              <FiMail className="auth-input-icon" />
+              <input
+                id="login-email"
+                type="email"
+                placeholder="name@example.com"
+                value={email}
+                className={errors.email ? 'invalid' : ''}
+                aria-invalid={!!errors.email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
             {errors.email && <p className="field-error" role="alert">{errors.email}</p>}
           </div>
-          <div className="input-group">
-            <FiLock className="input-icon" />
-            <input type="password" placeholder="Password" value={password}
-              className={errors.password ? 'invalid' : ''} aria-invalid={!!errors.password}
-              onChange={e => setPassword(e.target.value)} />
+
+          <div className="auth-field">
+            <label htmlFor="login-password">Password</label>
+            <div className="auth-input-container">
+              <FiLock className="auth-input-icon" />
+              <input
+                id="login-password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                className={errors.password ? 'invalid' : ''}
+                aria-invalid={!!errors.password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
             {errors.password && <p className="field-error" role="alert">{errors.password}</p>}
           </div>
-          <button type="submit" className="auth-btn" disabled={loading}>
-            {loading ? 'Signing in...' : <><FiLogIn /> Sign In</>}
+
+          <button type="submit" className="btn-primary auth-submit-btn" disabled={loading}>
+            <span>{loading ? 'Authenticating…' : 'Sign In to Account'}</span>
+            <FiArrowRight />
           </button>
         </form>
-        <p className="auth-footer">
-          Don't have an account? <Link to="/register">Sign Up</Link>
-        </p>
+
+        <div className="auth-footer-prompt">
+          <span>Don't have an account yet?</span>
+          <Link to="/register" className="auth-switch-link">Create Account</Link>
+        </div>
       </div>
     </div>
   );

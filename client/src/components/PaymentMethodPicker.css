@@ -1,0 +1,119 @@
+.pm-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.pm-option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px 18px;
+  text-align: left;
+  cursor: pointer;
+  background: var(--card-bg);
+  color: var(--text-color);
+  border: 1.5px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.pm-option:hover:not(:disabled) {
+  border-color: var(--text-color);
+  transform: translateY(-1px);
+}
+
+.pm-option:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.pm-option.selected {
+  border-color: var(--text-color);
+  background: var(--card-bg-elevated);
+  box-shadow: var(--shadow-md);
+}
+
+.pm-option:focus-visible {
+  outline: 2px solid var(--accent-secondary);
+  outline-offset: 2px;
+}
+
+.pm-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--card-bg-elevated);
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+  font-size: 1.25rem;
+}
+
+.pm-option.selected .pm-icon {
+  background: var(--brand-pill-bg);
+  color: var(--brand-pill-text);
+  border-color: var(--brand-pill-bg);
+}
+
+.pm-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pm-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-color);
+}
+
+.pm-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.pm-badge {
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: var(--card-bg-elevated);
+  border: 1px solid var(--card-border);
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pm-check {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--text-color);
+  font-size: 1.2rem;
+}
+
+.pm-empty {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 480px) {
+  .pm-option {
+    padding: 14px;
+    gap: 12px;
+  }
+  .pm-desc {
+    font-size: 0.78rem;
+  }
+}

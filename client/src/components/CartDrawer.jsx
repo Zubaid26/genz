@@ -2,6 +2,7 @@ import { FiX, FiMinus, FiPlus, FiTrash2 } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import useCart from '../hooks/useCart';
 import './CartDrawer.css';
+import { money } from '../utils/currency';
 
 export default function CartDrawer({ open, onClose }) {
   const { cart, updateItem, removeItem } = useCart();
@@ -24,7 +25,7 @@ export default function CartDrawer({ open, onClose }) {
                 <img src={item.product_id?.image_url || ''} alt={item.product_id?.name} />
                 <div className="item-details">
                   <h4>{item.product_id?.name}</h4>
-                  <p className="item-price">${item.price?.toFixed(2)}</p>
+                  <p className="item-price">{money(item.price)}</p>
                   <div className="qty-controls">
                     <button onClick={() => updateItem(item._id, Math.max(1, item.quantity - 1))}><FiMinus /></button>
                     <span>{item.quantity}</span>
@@ -40,7 +41,7 @@ export default function CartDrawer({ open, onClose }) {
           <div className="drawer-footer">
             <div className="drawer-total">
               <span>Total</span>
-              <span className="total-price">${cart.total?.toFixed(2)}</span>
+              <span className="total-price">{money(cart.total)}</span>
             </div>
             <Link to="/checkout" className="checkout-btn" onClick={onClose}>
               Checkout

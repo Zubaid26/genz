@@ -1,42 +1,227 @@
+/* ── Order Confirmation Receipt ── */
 .confirm-page {
-  min-height: 100vh; display: flex; align-items: center; justify-content: center;
-  padding: 80px 24px;
+  min-height: 85vh;
+  padding-top: 110px;
+  padding-bottom: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.confirm-card {
-  text-align: center; max-width: 480px; padding: 48px;
-  background: var(--card-bg); border: 1px solid var(--card-border);
-  border-radius: 24px;
+
+.confirm-loading-box {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-muted);
 }
-.confirm-icon { font-size: 4rem; color: #22c55e; margin-bottom: 16px; }
-.confirm-card h1 { color: var(--text-color); font-size: 1.8rem; margin-bottom: 8px; }
-.order-id { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px; }
-.confirm-details {
-  background: var(--input-bg); border-radius: 12px; padding: 16px;
+
+.confirm-editorial-card {
+  width: 100%;
+  max-width: 580px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-xl);
+  padding: 44px;
+  box-shadow: var(--shadow-lg);
+}
+
+.confirm-hero-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.confirm-success-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  background: var(--success-subtle);
+  color: var(--success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto 16px;
+}
+
+.confirm-eyebrow {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--success);
+  margin-bottom: 6px;
+}
+
+.confirm-headline {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--text-color);
+  letter-spacing: -0.03em;
+  margin-bottom: 10px;
+}
+
+.confirm-subtitle {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Identifier Banner */
+.confirm-id-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  background: var(--card-bg-elevated);
+  border: 1px solid var(--card-border);
   margin-bottom: 24px;
 }
-.detail-row {
-  display: flex; justify-content: space-between; padding: 8px 0;
-  color: var(--text-color); font-size: 0.9rem;
+
+.banner-label {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-bottom: 2px;
 }
-.status-badge {
-  background: rgba(34, 197, 94, 0.1); color: #22c55e;
-  padding: 2px 10px; border-radius: 6px; font-weight: 600; font-size: 0.8rem;
+
+.banner-val {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-color);
 }
-.detail-row .total { color: var(--accent-primary); font-weight: 700; }
-.confirm-actions { display: flex; flex-direction: column; gap: 12px; }
-.invoice-btn {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 12px; background: var(--card-bg);
+
+.banner-right {
+  text-align: right;
+}
+
+.banner-date {
+  font-size: 0.88rem;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+/* Details Sheet */
+.confirm-details-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: var(--input-bg);
   border: 1px solid var(--card-border);
-  color: var(--text-color); cursor: pointer; font-weight: 600; transition: 0.2s;
+  margin-bottom: 32px;
 }
-.invoice-btn:hover { background: var(--selection-bg); border-color: var(--accent-primary); }
-.orders-link {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 12px; border: 1px solid var(--card-border);
-  border-radius: 12px; color: var(--accent-primary); text-decoration: none; font-weight: 600;
+
+.confirm-detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 0.9rem;
 }
-.continue-link {
-  color: var(--text-muted); text-decoration: none; font-size: 0.9rem;
+
+.detail-prop {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-.continue-link:hover { color: var(--text-color); }
+
+.status-badge-pill {
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  background: var(--success-subtle);
+  color: var(--success);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.detail-val-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.payment-pill {
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.payment-pill.paid {
+  background: var(--success-subtle);
+  color: var(--success);
+}
+.payment-pill.pending {
+  background: var(--warning-subtle);
+  color: var(--warning);
+}
+
+.confirm-total-val {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: var(--text-color);
+}
+
+.shipping-detail-row {
+  align-items: flex-start;
+  padding-top: 10px;
+  border-top: 1px solid var(--card-border);
+}
+
+.detail-address-block {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.detail-address-block strong {
+  color: var(--text-color);
+}
+
+/* Actions Block */
+.confirm-actions-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.confirm-invoice-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 0.95rem;
+}
+
+.confirm-secondary-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.confirm-sub-btn {
+  padding: 12px;
+  font-size: 0.86rem;
+}
+
+@media (max-width: 580px) {
+  .confirm-editorial-card {
+    padding: 28px 20px;
+  }
+  .confirm-secondary-buttons {
+    grid-template-columns: 1fr;
+  }
+}

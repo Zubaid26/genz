@@ -8,7 +8,7 @@ const products = [
   {
     name: 'Cyberpunk Oversized Hoodie',
     category: 'Hoodies',
-    price: 59.99,
+    price: 6490,
     stock: 50,
     image_url: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800',
     overlay_image_url: 'https://cdn-icons-png.flaticon.com/512/3531/3531744.png',
@@ -17,7 +17,7 @@ const products = [
   {
     name: 'Vintage Acid Wash Tee',
     category: 'T-Shirts',
-    price: 29.99,
+    price: 2690,
     stock: 100,
     image_url: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800',
     overlay_image_url: 'https://cdn-icons-png.flaticon.com/512/3531/3531744.png',
@@ -26,7 +26,7 @@ const products = [
   {
     name: 'Streetwear Cargo Pants',
     category: 'Pants',
-    price: 74.99,
+    price: 7490,
     stock: 30,
     image_url: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=800',
     overlay_image_url: 'https://cdn-icons-png.flaticon.com/512/3531/3531744.png',
@@ -35,7 +35,7 @@ const products = [
   {
     name: 'Y2K Metallic Puffer Jacket',
     category: 'Outerwear',
-    price: 129.99,
+    price: 13990,
     stock: 15,
     image_url: 'https://images.unsplash.com/photo-1548126032-079a0fb0099d?q=80&w=800',
     overlay_image_url: 'https://cdn-icons-png.flaticon.com/512/3531/3531744.png',
@@ -44,7 +44,7 @@ const products = [
   {
     name: 'Neon Graphic Sweatshirt',
     category: 'Hoodies',
-    price: 49.99,
+    price: 5790,
     stock: 45,
     image_url: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=800',
     overlay_image_url: 'https://cdn-icons-png.flaticon.com/512/3531/3531744.png',
@@ -53,7 +53,7 @@ const products = [
   {
     name: 'Distressed Denim Jacket',
     category: 'Outerwear',
-    price: 89.99,
+    price: 7990,
     stock: 25,
     image_url: 'https://images.unsplash.com/photo-1601333144130-8cbb312386b6?q=80&w=800',
     overlay_image_url: 'https://cdn-icons-png.flaticon.com/512/3531/3531744.png',
@@ -62,7 +62,7 @@ const products = [
   {
     name: 'Wide-Leg Utility Jeans',
     category: 'Pants',
-    price: 65.00,
+    price: 6490,
     stock: 40,
     image_url: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800',
     overlay_image_url: 'https://cdn-icons-png.flaticon.com/512/3531/3531744.png',
@@ -71,7 +71,7 @@ const products = [
   {
     name: 'Techwear Windbreaker',
     category: 'Outerwear',
-    price: 95.00,
+    price: 10990,
     stock: 35,
     image_url: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?q=80&w=800',
     overlay_image_url: 'https://cdn-icons-png.flaticon.com/512/3531/3531744.png',
@@ -80,7 +80,7 @@ const products = [
   {
     name: 'Vibrant Tie-Dye Hoodie',
     category: 'Hoodies',
-    price: 55.00,
+    price: 6090,
     stock: 60,
     image_url: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800',
     overlay_image_url: 'https://cdn-icons-png.flaticon.com/512/3531/3531744.png',
