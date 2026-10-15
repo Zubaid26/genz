@@ -200,11 +200,11 @@ export default function UserDashboard() {
                 </div>
               </Link>
 
-              <Link to="/products" className="dash-shortcut-tile">
+              <Link to="/tryon" className="dash-shortcut-tile">
                 <FiShoppingBag className="shortcut-icon" />
                 <div>
-                  <strong>Explore Catalog</strong>
-                  <span>Browse latest drops</span>
+                  <strong>AI Try-On Studio</strong>
+                  <span>Virtual outfit preview</span>
                 </div>
               </Link>
 

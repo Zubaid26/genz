@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  FiArrowRight, FiTruck, FiShield, FiRefreshCw, FiAward,
+  FiArrowRight, FiTruck, FiShield, FiRefreshCw, FiCamera,
   FiCheck, FiZap, FiShoppingBag, FiLayers
 } from 'react-icons/fi';
 import API from '../utils/axiosInstance';
@@ -24,12 +24,18 @@ const HERO_FALLBACK = ['1734418040900-e964f84e8abb', '1564557287817-3785e38ec1f5
 
 const MARQUEE = [
   'New Season Drops',
-  'Contemporary Fusion',
+  'Virtual Try-On Studio',
   'Oversized Streetwear',
   'Contemporary Kurtas',
   'Free Shipping Over Rs 2,500',
   'Handcrafted Quality',
   'Easy 30-Day Returns'
+];
+
+const STEPS = [
+  { num: '01', title: 'Choose any item', text: 'Browse our apparel catalog and select any compatible piece.' },
+  { num: '02', title: 'Enable AI studio', text: 'Activate your webcam securely without uploading personal photos.' },
+  { num: '03', title: 'Preview & purchase', text: 'Inspect fit, proportions, and fabric drape before ordering.' },
 ];
 
 function Reveal({ children, className = '', delay = 0 }) {
@@ -129,33 +135,111 @@ export default function Home() {
 
   return (
     <div className="home-editorial">
-      {/* ─── HERO SECTION (MATCHING REFERENCE DESIGN) ─── */}
-      <section className="hero-ref-section">
-        <div className="hero-ref-media-layer">
-          <img
-            src="/hero-models.png"
-            alt="Gen-Z Threads Contemporary Collection"
-            className="hero-ref-backdrop-img"
-            loading="eager"
-          />
-          <div className="hero-ref-backdrop-gradient" aria-hidden="true" />
-        </div>
+      {/* ─── HERO SECTION ─── */}
+      <section className="hero-editorial">
+        <div className="container hero-layout-grid">
+          <div className="hero-copy-column">
+            <div className="hero-badge-pill">
+              <span className="live-dot" />
+              <span>Fall/Winter Collection Live</span>
+            </div>
 
-        <div className="container hero-ref-container">
-          <div className="hero-ref-content">
-            <span className="hero-ref-eyebrow">THE NEW STANDARD</span>
-            <h1 className="hero-ref-title">
-              Everyday,<br />
-              redefined.
+            <h1 className="hero-display-title">
+              Contemporary Cuts.<br />
+              <span className="hero-title-highlight">Authentic Roots.</span>
             </h1>
-            <p className="hero-ref-subtitle">
-              Contemporary clothing. Authentic roots.
+
+            <p className="hero-description">
+              Engineered for the modern wardrobe. Discover luxury shalwar kameez,
+              tailored kurtas, and oversized streetwear with instant AI Virtual Try-On.
             </p>
-            <div className="hero-ref-actions">
-              <Link to="/products" className="hero-ref-cta-btn">
-                <span>Explore the collection</span>
+
+            <div className="hero-action-buttons">
+              <Link to="/products" className="btn-primary hero-btn-main">
+                <span>Explore Catalog</span>
                 <FiArrowRight />
               </Link>
+              <Link to="/tryon" className="btn-secondary hero-btn-sub">
+                <FiCamera />
+                <span>Launch Try-On</span>
+              </Link>
+            </div>
+
+            <div className="hero-metrics-row">
+              <div className="metric-cell">
+                <strong className="metric-number">{products.length > 0 ? `${products.length}+` : '50+'}</strong>
+                <span className="metric-label">Curated Styles</span>
+              </div>
+              <div className="metric-divider" />
+              <div className="metric-cell">
+                <strong className="metric-number">6</strong>
+                <span className="metric-label">Apparel Lines</span>
+              </div>
+              <div className="metric-divider" />
+              <div className="metric-cell">
+                <strong className="metric-number">Rs 2,500+</strong>
+                <span className="metric-label">Ships Free</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Hero Editorial Collage */}
+          <div className="hero-visual-column">
+            <div className="hero-collage-wrap">
+              {/* Primary Showcase Card */}
+              <div className="hero-main-card">
+                {heroPicks[0] ? (
+                  <Link to={`/products/${heroPicks[0]._id}`} className="hero-photo-link">
+                    <img
+                      src={heroPicks[0].image_url}
+                      alt={heroPicks[0].name}
+                      className="hero-main-img"
+                      loading="eager"
+                    />
+                    <div className="hero-photo-meta">
+                      <span className="hero-product-name">{heroPicks[0].name}</span>
+                      <span className="hero-product-price">{money(heroPicks[0].price)}</span>
+                    </div>
+                  </Link>
+                ) : (
+                  <div className="hero-fallback-card">
+                    <img src={img(HERO_FALLBACK[0], 700)} alt="New Season Feature" className="hero-main-img" />
+                    <div className="hero-photo-meta">
+                      <span className="hero-product-name">Signature Drop</span>
+                      <span className="hero-product-price">Rs 4,190</span>
+                    </div>
+                  </div>
+                )}
+                <div className="hero-studio-tag">
+                  <FiCamera /> AI Try-On Compatible
+                </div>
+              </div>
+
+              {/* Supporting Secondary Card */}
+              <div className="hero-sub-card">
+                {heroPicks[1] ? (
+                  <Link to={`/products/${heroPicks[1]._id}`} className="hero-sub-link">
+                    <img
+                      src={heroPicks[1].image_url}
+                      alt={heroPicks[1].name}
+                      className="hero-sub-img"
+                      loading="lazy"
+                    />
+                    <div className="hero-sub-meta">
+                      <span>{heroPicks[1].category}</span>
+                      <strong>{money(heroPicks[1].price)}</strong>
+                    </div>
+                  </Link>
+                ) : (
+                  <div className="hero-sub-link">
+                    <img src={img(HERO_FALLBACK[1], 500)} alt="Featured Look" className="hero-sub-img" />
+                    <div className="hero-sub-meta">
+                      <span>Oversized Fleece</span>
+                      <strong>Rs 2,990</strong>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -251,6 +335,60 @@ export default function Home() {
         )}
       </section>
 
+      {/* ─── VIRTUAL TRY-ON STUDIO SPOTLIGHT ─── */}
+      <section className="studio-spotlight-section">
+        <div className="container studio-spotlight-grid">
+          <Reveal className="studio-visual-card">
+            <div className="studio-scanner-frame">
+              <img
+                src={heroPicks[0]?.image_url || img('1734418040900-e964f84e8abb', 800)}
+                alt="AI Virtual Try-On Demonstration"
+                loading="lazy"
+              />
+              <div className="scanner-bracket br-tl" />
+              <div className="scanner-bracket br-tr" />
+              <div className="scanner-bracket br-bl" />
+              <div className="scanner-bracket br-br" />
+              <div className="scanner-sweep-bar" />
+              <div className="scanner-status-pill">
+                <span className="scanner-pulse" />
+                <span>AI STUDIO ACTIVE</span>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal className="studio-content-card" delay={100}>
+            <span className="eyebrow">Real-Time Fitting Studio</span>
+            <h2 className="studio-title">Preview Before You Purchase</h2>
+            <p className="studio-description">
+              Eliminate uncertainty on sizing and silhouettes. Open the browser-based AI studio,
+              see your selected piece overlay onto live camera feed, and order with 100% confidence.
+            </p>
+
+            <div className="studio-steps-list">
+              {STEPS.map((s) => (
+                <div key={s.num} className="studio-step-row">
+                  <span className="step-badge">{s.num}</span>
+                  <div>
+                    <h4 className="step-title">{s.title}</h4>
+                    <p className="step-desc">{s.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="studio-actions">
+              <Link to="/tryon" className="btn-primary">
+                <FiCamera />
+                <span>Launch Try-On Studio</span>
+              </Link>
+              <Link to="/products" className="btn-secondary">
+                <span>View Compatible Pieces</span>
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+      </section>
 
       {/* ─── BRAND VALUES & STANDARDS ─── */}
       <section className="section-space container">
@@ -265,7 +403,7 @@ export default function Home() {
         <div className="pillars-grid">
           {[
             { icon: FiLayers, title: 'Premium Fabrics', desc: 'Sourced from local organic cotton mills, pre-shrunk and built to endure daily wear.' },
-            { icon: FiAward, title: 'Tailored Fits', desc: 'Expertly patterned cuts ensuring silhouette perfection across all body types.' },
+            { icon: FiCamera, title: 'AI Studio Previews', desc: 'Preview your outfits live before buying to ensure the exact cut and drape you desire.' },
             { icon: FiTruck, title: 'Express Delivery', desc: 'Dispatched in discreet luxury packaging within 24 hours. Ships free on orders over Rs 2,500.' },
             { icon: FiRefreshCw, title: '30-Day Exchanges', desc: 'If the fit or color isn’t just right, swap it seamlessly through your customer portal.' },
           ].map(({ icon: Icon, title, desc }, idx) => (
@@ -288,7 +426,7 @@ export default function Home() {
               <span className="eyebrow">Join the Inner Circle</span>
               <h2 className="newsletter-headline">Get First Access to Weekly Drops</h2>
               <p className="newsletter-sub">
-                Subscribe to receive private lookbooks, member-only discounts, and exclusive seasonal perks.
+                Subscribe to receive private lookbooks, member-only discounts, and early try-on access.
               </p>
 
               {subscribed ? (

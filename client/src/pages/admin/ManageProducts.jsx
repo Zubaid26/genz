@@ -9,7 +9,7 @@ export default function ManageProducts() {
   const [products, setProducts] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({
-    name: '', category: '', price: '', stock: '', image_url: '', description: ''
+    name: '', category: '', price: '', stock: '', image_url: '', overlay_image_url: '', description: ''
   });
   const [editId, setEditId] = useState(null);
 
@@ -36,7 +36,7 @@ export default function ManageProducts() {
         await API.post('/products', data);
         toast.success('Product added successfully!');
       }
-      setForm({ name: '', category: '', price: '', stock: '', image_url: '', description: '' });
+      setForm({ name: '', category: '', price: '', stock: '', image_url: '', overlay_image_url: '', description: '' });
       setEditId(null);
       setShowForm(false);
       fetchProducts();
@@ -52,6 +52,7 @@ export default function ManageProducts() {
       price: p.price,
       stock: p.stock,
       image_url: p.image_url,
+      overlay_image_url: p.overlay_image_url || '',
       description: p.description || ''
     });
     setEditId(p._id);
@@ -86,7 +87,7 @@ export default function ManageProducts() {
               setShowForm(false);
               setEditId(null);
             } else {
-              setForm({ name: '', category: '', price: '', stock: '', image_url: '', description: '' });
+              setForm({ name: '', category: '', price: '', stock: '', image_url: '', overlay_image_url: '', description: '' });
               setEditId(null);
               setShowForm(true);
             }
@@ -169,6 +170,15 @@ export default function ManageProducts() {
               />
             </div>
 
+            <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+              <label>Try-On Overlay PNG URL (Optional)</label>
+              <input
+                name="overlay_image_url"
+                value={form.overlay_image_url}
+                onChange={handleChange}
+                placeholder="Transparent PNG URL for AI try-on overlay"
+              />
+            </div>
           </div>
 
           {form.image_url && (

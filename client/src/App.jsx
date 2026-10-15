@@ -3,7 +3,6 @@ import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
-import ScrollToTop from './components/ScrollToTop';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
@@ -14,6 +13,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ProductCatalog from './pages/ProductCatalog';
 import ProductDetail from './pages/ProductDetail';
+import TryOn from './pages/TryOn';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import OrderConfirmation from './pages/OrderConfirmation';
@@ -38,7 +38,6 @@ function AppShell() {
 
   return (
     <>
-      <ScrollToTop />
       <Navbar />
       <Toaster
         position="top-right"
@@ -61,6 +60,8 @@ function AppShell() {
         <Route path="/products/:id" element={<ProductDetail />} />
 
         {/* Protected Routes */}
+        <Route path="/tryon" element={<ProtectedRoute><TryOn /></ProtectedRoute>} />
+        <Route path="/tryon/:id" element={<ProtectedRoute><TryOn /></ProtectedRoute>} />
         <Route path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
         <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
         <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />

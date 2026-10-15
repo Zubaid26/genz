@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiHeart, FiShoppingBag, FiCheck } from 'react-icons/fi';
+import { FiHeart, FiShoppingBag, FiCamera, FiCheck } from 'react-icons/fi';
 import useAuth from '../hooks/useAuth';
 import useCart from '../hooks/useCart';
 import toast from 'react-hot-toast';
@@ -91,7 +91,11 @@ export default function ProductCard({ product }) {
           {isOutOfStock && (
             <span className="product-badge badge-danger">Sold Out</span>
           )}
-
+          {product.overlay_image_url && (
+            <span className="product-badge badge-tryon" title="Virtual Try-On Compatible">
+              <FiCamera /> Try-On
+            </span>
+          )}
         </div>
 
         {/* Wishlist Action Button */}

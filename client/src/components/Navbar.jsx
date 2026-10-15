@@ -2,29 +2,29 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   FiShoppingCart, FiUser, FiSearch, FiMenu, FiX, FiLogOut,
-  FiHeart, FiPackage, FiGrid, FiArrowRight
+  FiHeart, FiPackage, FiGrid, FiSun, FiMoon, FiCamera, FiArrowRight
 } from 'react-icons/fi';
 import useAuth from '../hooks/useAuth';
 import useCart from '../hooks/useCart';
+import useTheme from '../context/ThemeContext';
 import './Navbar.css';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
 
   const [search, setSearch] = useState('');
-  const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const dropdownRef = useRef(null);
-  const searchRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 15);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -35,19 +35,15 @@ export default function Navbar() {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropOpen(false);
       }
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setSearchOpen(false);
-      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Close drawers/menus on route change
+  // Close mobile drawer on route change
   useEffect(() => {
     setMenuOpen(false);
     setDropOpen(false);
-    setSearchOpen(false);
   }, [location.pathname]);
 
   const handleSearch = (e) => {
@@ -55,22 +51,13 @@ export default function Navbar() {
     if (search.trim()) {
       navigate(`/products?search=${encodeURIComponent(search.trim())}`);
       setSearch('');
-      setSearchOpen(false);
       setMenuOpen(false);
-    }
-  };
-
-  const handleScrollToAbout = (e) => {
-    if (location.pathname === '/') {
-      e.preventDefault();
-      const el = document.querySelector('.pillars-grid') || document.querySelector('.site-footer');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   return (
     <header className={`navbar-header ${scrolled ? 'is-scrolled' : ''}`}>
-      <div className="nav-floating-island">
+      <div className="nav-container">
         {/* Brand Logo */}
         <Link to="/" className="nav-logo" aria-label="Gen-Z Threads Home">
           <div className="nav-logo-mark">
@@ -82,85 +69,63 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Center Desktop Navigation Links */}
-        <nav className="nav-pill-links" aria-label="Main Navigation">
-          <Link
-            to="/products"
-            className={`nav-pill-link ${location.pathname === '/products' && !location.search ? 'active' : ''}`}
-          >
-            Shop
-          </Link>
-          <Link
-            to="/products"
-            className="nav-pill-link"
-          >
-            Collections
-          </Link>
-          <a
-            href="#about"
-            className="nav-pill-link"
-            onClick={handleScrollToAbout}
-          >
-            About
-          </a>
-        </nav>
-
-        {/* Vertical Separator Divider */}
-        <div className="nav-pill-divider" aria-hidden="true" />
-
-        {/* Right Controls & Actions */}
-        <div className="nav-pill-actions">
-          {/* Search Trigger Button */}
-          <div className="nav-search-wrap" ref={searchRef}>
+        {/* Global Search Bar (Desktop) */}
+        <form className="nav-search-form" onSubmit={handleSearch} role="search">
+          <FiSearch className="nav-search-icon" aria-hidden="true" />
+          <input
+            type="search"
+            name="search"
+            className="nav-search-input"
+            placeholder="Search kurtas, hoodies, baggy fits..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            aria-label="Search catalog"
+          />
+          {search && (
             <button
               type="button"
-              className={`nav-pill-icon-btn ${searchOpen ? 'active' : ''}`}
-              onClick={() => setSearchOpen(!searchOpen)}
-              title="Search store"
-              aria-label="Search store"
-              aria-expanded={searchOpen}
+              className="nav-search-clear"
+              onClick={() => setSearch('')}
+              aria-label="Clear search"
             >
-              <FiSearch />
+              <FiX />
             </button>
+          )}
+        </form>
 
-            {searchOpen && (
-              <form className="nav-search-popover fade-in" onSubmit={handleSearch} role="search">
-                <FiSearch className="popover-search-icon" aria-hidden="true" />
-                <input
-                  type="search"
-                  autoFocus
-                  placeholder="Search kurtas, hoodies..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="popover-search-input"
-                  aria-label="Search catalog"
-                />
-                <button
-                  type="button"
-                  className="popover-close-btn"
-                  onClick={() => setSearchOpen(false)}
-                  aria-label="Close search"
-                >
-                  <FiX />
-                </button>
-              </form>
-            )}
-          </div>
+        {/* Desktop Navigation Links & Actions */}
+        <nav className="nav-desktop-actions" aria-label="Main Navigation">
+          <Link to="/products" className={`nav-link ${location.pathname === '/products' ? 'active' : ''}`}>
+            Shop
+          </Link>
+          <Link to="/tryon" className={`nav-tryon-pill ${location.pathname.startsWith('/tryon') ? 'active' : ''}`}>
+            <FiCamera className="tryon-icon" />
+            <span>AI Try-On</span>
+          </Link>
 
-          {/* Cart Button */}
+          {/* Theme Toggle */}
+          <button
+            type="button"
+            className="nav-icon-btn theme-toggle-btn"
+            onClick={toggleTheme}
+            title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+            aria-label="Toggle visual theme"
+          >
+            {theme === 'dark' ? <FiSun /> : <FiMoon />}
+          </button>
+
+          {/* Cart Icon */}
           <Link
             to="/cart"
-            className="nav-pill-icon-btn"
+            className="nav-icon-btn cart-nav-btn"
             title="Shopping Cart"
             aria-label={`Shopping Cart with ${cartCount || 0} items`}
           >
             <FiShoppingCart />
-            {cartCount > 0 && (
-              <span className="nav-pill-cart-badge">{cartCount > 99 ? '99+' : cartCount}</span>
-            )}
+            {cartCount > 0 && <span className="nav-cart-badge">{cartCount > 99 ? '99+' : cartCount}</span>}
           </Link>
 
-          {/* Auth Button or User Menu */}
+          {/* User Account / Dropdown */}
           {user ? (
             <div className="user-dropdown-wrap" ref={dropdownRef}>
               <button
@@ -214,12 +179,12 @@ export default function Navbar() {
               )}
             </div>
           ) : (
-            <Link to="/login" className="nav-pill-signin-btn">
+            <Link to="/login" className="nav-login-cta">
               Sign In
             </Link>
           )}
 
-          {/* Mobile Hamburger Button */}
+          {/* Mobile Menu Toggle Button */}
           <button
             type="button"
             className="mobile-hamburger-btn"
@@ -229,7 +194,7 @@ export default function Navbar() {
           >
             {menuOpen ? <FiX /> : <FiMenu />}
           </button>
-        </div>
+        </nav>
       </div>
 
       {/* Mobile Drawer Navigation */}
@@ -264,12 +229,9 @@ export default function Navbar() {
               <Link to="/products" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
                 Shop Catalog
               </Link>
-              <Link to="/products" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
-                Collections
+              <Link to="/tryon" className="mobile-nav-link highlight" onClick={() => setMenuOpen(false)}>
+                <FiCamera /> Virtual Try-On Studio
               </Link>
-              <a href="#about" className="mobile-nav-link" onClick={(e) => { handleScrollToAbout(e); setMenuOpen(false); }}>
-                About
-              </a>
               <Link to="/cart" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
                 <FiShoppingCart /> Cart ({cartCount})
               </Link>

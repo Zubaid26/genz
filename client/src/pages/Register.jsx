@@ -55,7 +55,7 @@ export default function Register() {
 
         <div className="auth-header-block">
           <h1 className="auth-title">Create Account</h1>
-          <p className="auth-sub">Join Gen-Z Threads to save your favorites, track orders, and get member perks.</p>
+          <p className="auth-sub">Join Gen-Z Threads to save your favorites, track orders, and experience AI Try-On.</p>
         </div>
 
         <form onSubmit={handleSubmit} noValidate className="auth-form-body">

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { NavLink, Outlet, Link } from 'react-router-dom';
 import {
   FiGrid, FiPackage, FiUsers, FiShoppingBag, FiBarChart2,
-  FiHome, FiMenu, FiX, FiShield
+  FiHome, FiMenu, FiX, FiCamera, FiShield
 } from 'react-icons/fi';
 import './Admin.css';
 
@@ -58,6 +58,9 @@ export default function AdminLayout() {
         </nav>
 
         <div className="admin-sidebar-footer">
+          <Link to="/tryon" className="admin-side-link subtle" onClick={() => setOpen(false)}>
+            <FiCamera /> <span>Try-On Studio</span>
+          </Link>
           <Link to="/" className="admin-side-link subtle" onClick={() => setOpen(false)}>
             <FiHome /> <span>Back to Storefront</span>
           </Link>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
-  FiShoppingCart, FiHeart, FiArrowLeft, FiTruck,
+  FiShoppingCart, FiHeart, FiArrowLeft, FiCamera, FiTruck,
   FiShield, FiRefreshCw, FiCheck, FiMinus, FiPlus
 } from 'react-icons/fi';
 import API from '../utils/axiosInstance';
@@ -130,7 +130,11 @@ export default function ProductDetail() {
                 e.target.src = "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800";
               }}
             />
-
+            {product.overlay_image_url && (
+              <div className="detail-tryon-chip">
+                <FiCamera /> Virtual Try-On Ready
+              </div>
+            )}
           </div>
         </div>
 
@@ -200,7 +204,7 @@ export default function ProductDetail() {
             </div>
           )}
 
-          {/* Action CTAs: Add to Cart, Wishlist */}
+          {/* Action CTAs: Add to Cart, Wishlist, Virtual Try-On */}
           <div className="detail-cta-row">
             <button
               type="button"
@@ -228,7 +232,17 @@ export default function ProductDetail() {
             </button>
           </div>
 
-
+          {/* AI Try-On Studio Direct Button */}
+          <div className="detail-tryon-banner">
+            <div className="tryon-banner-copy">
+              <span className="tryon-banner-title">Unsure about the fit?</span>
+              <p className="tryon-banner-sub">Test this piece on your camera in our AI Try-On studio.</p>
+            </div>
+            <Link to={`/tryon?product=${product._id}`} className="detail-tryon-link-btn">
+              <FiCamera />
+              <span>Launch Studio</span>
+            </Link>
+          </div>
 
           {/* Trust Guarantees */}
           <div className="detail-perks-list">

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import {
   FiInstagram, FiTwitter, FiYoutube, FiMail,
-  FiTruck, FiShield, FiRefreshCw, FiAward, FiArrowUpRight
+  FiTruck, FiShield, FiRefreshCw, FiCamera, FiArrowUpRight
 } from 'react-icons/fi';
 import './Footer.css';
 
@@ -19,10 +19,10 @@ export default function Footer() {
             </div>
           </div>
           <div className="perk-item">
-            <div className="perk-icon-wrap"><FiAward /></div>
+            <div className="perk-icon-wrap"><FiCamera /></div>
             <div>
-              <p className="perk-title">100% Authentic Quality</p>
-              <p className="perk-sub">Crafted from premium sustainable fabrics</p>
+              <p className="perk-title">AI Virtual Try-On</p>
+              <p className="perk-sub">Live studio preview before you buy</p>
             </div>
           </div>
           <div className="perk-item">
@@ -36,7 +36,7 @@ export default function Footer() {
             <div className="perk-icon-wrap"><FiShield /></div>
             <div>
               <p className="perk-title">Secure Checkouts</p>
-              <p className="perk-sub">COD, Cards, JazzCash & Easypaisa</p>
+              <p className="perk-sub">JazzCash, Easypaisa & Cash on Delivery</p>
             </div>
           </div>
         </div>
@@ -53,7 +53,7 @@ export default function Footer() {
           </div>
           <p className="footer-tagline">
             Contemporary streetwear and modern ethnic fusion crafted for the digital generation.
-            Explore authentic cuts, oversized silhouettes, and tailored perfection.
+            Explore authentic cuts, oversized silhouettes, and real-time virtual try-ons.
           </p>
           <div className="footer-social-row">
             <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Follow us on Instagram">
@@ -86,8 +86,9 @@ export default function Footer() {
 
         {/* Quick Navigation */}
         <div className="footer-links-col">
-          <h4 className="footer-heading">My Account</h4>
+          <h4 className="footer-heading">Studio & Account</h4>
           <ul className="footer-nav-list">
+            <li><Link to="/tryon">AI Try-On Studio</Link></li>
             <li><Link to="/dashboard">Customer Portal</Link></li>
             <li><Link to="/orders">Order History & Tracking</Link></li>
             <li><Link to="/wishlist">Saved Wishlist</Link></li>

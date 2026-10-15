@@ -84,6 +84,24 @@
   display: block;
 }
 
+.detail-tryon-chip {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  background: rgba(18, 18, 27, 0.85);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-sm);
+}
 
 /* ── Content Wrap ── */
 .detail-content-wrap {
@@ -307,7 +325,54 @@
   fill: #e11d48;
 }
 
+/* Virtual Try-On Banner */
+.detail-tryon-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: var(--card-bg-elevated);
+  border: 1px solid var(--card-border);
+  margin-bottom: 32px;
+}
 
+.tryon-banner-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-color);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.tryon-banner-sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.detail-tryon-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.detail-tryon-link-btn:hover {
+  border-color: var(--text-color);
+  transform: translateY(-1px);
+}
 
 /* Perks List */
 .detail-perks-list {
@@ -383,4 +448,13 @@
   }
 }
 
-
+@media (max-width: 540px) {
+  .detail-tryon-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .detail-tryon-link-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

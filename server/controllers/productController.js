@@ -115,6 +115,19 @@ exports.getProduct = async (req, res) => {
   }
 };
 
+// GET /api/products/:id/overlay — overlay image URL for Try-On
+exports.getOverlay = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id).select('overlay_image_url');
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found.' });
+    }
+    res.json({ overlay_image_url: product.overlay_image_url });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error.', error: error.message });
+  }
+};
+
 // POST /api/products — add product (admin)
 exports.createProduct = async (req, res) => {
   try {
