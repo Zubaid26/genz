@@ -14,6 +14,7 @@ import Register from './pages/Register';
 import ProductCatalog from './pages/ProductCatalog';
 import ProductDetail from './pages/ProductDetail';
 import Collections from './pages/Collections';
+import About from './pages/About';
 import TryOn from './pages/TryOn';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
@@ -60,6 +61,7 @@ function AppShell() {
         <Route path="/products" element={<ProductCatalog />} />
         <Route path="/products/:id" element={<ProductDetail />} />
         <Route path="/collections" element={<Collections />} />
+        <Route path="/about" element={<About />} />
 
         {/* Protected Routes */}
         <Route path="/tryon" element={<ProtectedRoute><TryOn /></ProtectedRoute>} />

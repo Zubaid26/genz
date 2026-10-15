@@ -88,6 +88,7 @@ export default function Footer() {
         <div className="footer-links-col">
           <h4 className="footer-heading">Studio & Account</h4>
           <ul className="footer-nav-list">
+            <li><Link to="/about">About Our Brand</Link></li>
             <li><Link to="/tryon">AI Try-On Studio</Link></li>
             <li><Link to="/dashboard">Customer Portal</Link></li>
             <li><Link to="/orders">Order History & Tracking</Link></li>

@@ -101,13 +101,12 @@ export default function Navbar() {
           >
             Collections
           </Link>
-          <a
-            href="#about"
-            className="nav-pill-link"
-            onClick={handleScrollToAbout}
+          <Link
+            to="/about"
+            className={`nav-pill-link ${location.pathname === '/about' ? 'active' : ''}`}
           >
             About
-          </a>
+          </Link>
         </nav>
 
         {/* Vertical Divider matching reference */}
@@ -286,9 +285,9 @@ export default function Navbar() {
               <Link to="/collections" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
                 Collections
               </Link>
-              <a href="#about" className="mobile-nav-link" onClick={(e) => { handleScrollToAbout(e); setMenuOpen(false); }}>
+              <Link to="/about" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
                 About
-              </a>
+              </Link>
               <Link to="/cart" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
                 <FiShoppingCart /> Cart ({cartCount})
               </Link>
