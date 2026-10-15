@@ -8,7 +8,12 @@ import API from '../utils/axiosInstance';
 import './OrderConfirmation.css';
 import { money } from '../utils/currency';
 
-const METHOD_LABELS = { jazzcash: 'JazzCash Mobile', easypaisa: 'Easypaisa Mobile', cod: 'Cash on Delivery' };
+const METHOD_LABELS = {
+  cod: 'Cash on Delivery (COD)',
+  card: 'Debit/Credit Card',
+  jazzcash: 'JazzCash Mobile',
+  easypaisa: 'Easypaisa Mobile'
+};
 
 export default function OrderConfirmation() {
   const { id } = useParams();

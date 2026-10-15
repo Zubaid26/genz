@@ -195,7 +195,7 @@ export default function Cart() {
 
             <div className="accepted-wallets-note">
               <span>Accepted:</span>
-              <strong>JazzCash</strong> · <strong>Easypaisa</strong> · <strong>Cash on Delivery</strong>
+              <strong>Cash on Delivery</strong> · <strong>Debit/Credit Card</strong> · <strong>JazzCash</strong> · <strong>Easypaisa</strong>
             </div>
           </div>
         </aside>

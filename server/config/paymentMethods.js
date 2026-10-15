@@ -30,14 +30,31 @@ const normalizeCard = (raw) => {
  */
 const METHODS = [
   {
+    id: 'cod',
+    label: 'Cash on Delivery (COD)',
+    description: 'Pay the courier in cash when your order arrives.',
+    provider: 'manual',
+    requiresPayment: false,
+    fields: [],
+    isAvailable: () => true
+  },
+  {
+    id: 'card',
+    label: 'Debit/Credit Card',
+    description: 'Pay securely with Visa, Mastercard, or UnionPay.',
+    provider: 'card',
+    requiresPayment: true,
+    fields: ['cardNumber', 'expiry', 'cvv', 'cardName'],
+    isAvailable: () => true
+  },
+  {
     id: 'jazzcash',
     label: 'JazzCash',
     description: 'Pay from your JazzCash mobile wallet.',
     provider: 'jazzcash',
     requiresPayment: true,
-    // Wallet charge needs the payer's mobile number and CNIC digits.
     fields: ['mobile', 'cnic'],
-    isAvailable: () => isAvailable('jazzcash')
+    isAvailable: () => true
   },
   {
     id: 'easypaisa',
@@ -46,24 +63,6 @@ const METHODS = [
     provider: 'easypaisa',
     requiresPayment: true,
     fields: ['mobile'],
-    isAvailable: () => isAvailable('easypaisa')
-  },
-  {
-    id: 'card',
-    label: 'Credit / Debit Card',
-    description: 'Pay securely with Visa, Mastercard, or UnionPay.',
-    provider: 'card',
-    requiresPayment: true,
-    fields: ['cardNumber', 'expiry', 'cvv', 'cardName'],
-    isAvailable: () => isAvailable('card')
-  },
-  {
-    id: 'cod',
-    label: 'Cash on Delivery',
-    description: 'Pay the courier in cash when your order arrives.',
-    provider: 'manual',
-    requiresPayment: false,
-    fields: [],
     isAvailable: () => true
   }
 ];

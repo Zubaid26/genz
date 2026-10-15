@@ -36,7 +36,7 @@ export default function Footer() {
             <div className="perk-icon-wrap"><FiShield /></div>
             <div>
               <p className="perk-title">Secure Checkouts</p>
-              <p className="perk-sub">JazzCash, Easypaisa & Cash on Delivery</p>
+              <p className="perk-sub">COD, Cards, JazzCash & Easypaisa</p>
             </div>
           </div>
         </div>

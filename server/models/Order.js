@@ -52,7 +52,7 @@ const OrderSchema = new mongoose.Schema({
   },
   payment_method: {
     type: String,
-    enum: ['jazzcash', 'easypaisa', 'cod'],
+    enum: ['cod', 'card', 'jazzcash', 'easypaisa'],
     default: 'cod'
   },
   payment_status: {

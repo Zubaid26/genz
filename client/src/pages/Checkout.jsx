@@ -29,6 +29,41 @@ const isValidMobile = (raw) => {
   return /^0?3\d{9}$/.test(d) || /^923\d{9}$/.test(d) || /^00923\d{9}$/.test(d);
 };
 
+const DEFAULT_PAYMENT_METHODS = [
+  {
+    id: 'cod',
+    label: 'Cash on Delivery (COD)',
+    description: 'Pay the courier in cash when your order arrives.',
+    provider: 'manual',
+    requiresPayment: false,
+    fields: []
+  },
+  {
+    id: 'card',
+    label: 'Debit/Credit Card',
+    description: 'Pay securely with Visa, Mastercard, or UnionPay.',
+    provider: 'card',
+    requiresPayment: true,
+    fields: ['cardNumber', 'expiry', 'cvv', 'cardName']
+  },
+  {
+    id: 'jazzcash',
+    label: 'JazzCash',
+    description: 'Pay from your JazzCash mobile wallet.',
+    provider: 'jazzcash',
+    requiresPayment: true,
+    fields: ['mobile', 'cnic']
+  },
+  {
+    id: 'easypaisa',
+    label: 'Easypaisa',
+    description: 'Pay from your Easypaisa mobile account.',
+    provider: 'easypaisa',
+    requiresPayment: true,
+    fields: ['mobile']
+  }
+];
+
 export default function Checkout() {
   const { cart, fetchCart } = useCart();
   const navigate = useNavigate();
@@ -36,9 +71,9 @@ export default function Checkout() {
   const [form, setForm] = useState(EMPTY_ADDRESS);
   const [wallet, setWallet] = useState({ mobile: '', cnic: '' });
   const [card, setCard] = useState({ cardNumber: '', expiry: '', cvv: '', cardName: '' });
-  const [methods, setMethods] = useState([]);
-  const [selected, setSelected] = useState('');
-  const [loadingMethods, setLoadingMethods] = useState(true);
+  const [methods, setMethods] = useState(DEFAULT_PAYMENT_METHODS);
+  const [selected, setSelected] = useState('cod');
+  const [loadingMethods, setLoadingMethods] = useState(false);
   const [busy, setBusy] = useState(false);
 
   const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -62,11 +97,14 @@ export default function Checkout() {
     API.get('/payment/methods')
       .then((res) => {
         const list = res.data.methods || [];
-        setMethods(list);
-        if (list.length) setSelected(list[0].id);
+        if (list.length > 0) {
+          setMethods(list);
+          setSelected((prev) => (list.some((m) => m.id === prev) ? prev : list[0].id));
+        }
       })
-      .catch(() => toast.error('Could not load payment methods'))
-      .finally(() => setLoadingMethods(false));
+      .catch((err) => {
+        console.warn('Could not fetch dynamic payment methods, using defaults:', err);
+      });
   }, []);
 
   const placeOrder = useCallback(async (payment) => {

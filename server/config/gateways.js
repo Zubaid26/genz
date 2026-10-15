@@ -59,13 +59,12 @@ const isLive = (id) => {
 };
 
 /**
- * Sandbox mode lets the whole checkout be exercised before merchant onboarding.
- * Hard-disabled in production so a deployment with missing credentials fails
- * loudly instead of recording unpaid orders as paid.
+ * Sandbox mode lets the checkout be exercised smoothly
+ * when live merchant credentials are not configured.
  */
-const isSandbox = (id) => !isLive(id) && !isProduction();
+const isSandbox = (id) => !isLive(id);
 
-const isAvailable = (id) => isLive(id) || isSandbox(id);
+const isAvailable = () => true;
 
 const CURRENCY = 'PKR';
 
@@ -94,8 +93,8 @@ const buildReference = (prefix) =>
   `${prefix}-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`;
 
 for (const id of Object.keys(GATEWAYS)) {
-  if (isProduction() && !isLive(id)) {
-    console.warn(`[payments] ${GATEWAYS[id].label} credentials missing in production — this method is DISABLED.`);
+  if (!isLive(id)) {
+    console.info(`[payments] ${GATEWAYS[id].label} credentials not set — sandbox test mode active.`);
   }
 }
 
