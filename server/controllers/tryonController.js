@@ -144,6 +144,49 @@ exports.getGarmentImage = async (req, res) => {
   }
 };
 
+// POST /api/tryon/ai-try-on — real AI try-on: customer's own photo + a garment photo (IDM-VTON)
+exports.aiTryOn = async (req, res) => {
+  const { person_image, garment_image, garment_image_url, garment_description, denoise_steps, seed } = req.body;
+  if (!person_image) {
+    return res.status(400).json({ success: false, message: 'A photo of yourself is required.' });
+  }
+  if (!garment_image && !garment_image_url) {
+    return res.status(400).json({ success: false, message: 'A garment image is required.' });
+  }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 170000); // IDM-VTON's free queue can be slow
+  try {
+    const response = await fetch(`${TRYON_API_URL}/api/ai-try-on`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        person_image, garment_image, garment_image_url,
+        garment_description: garment_description || '',
+        denoise_steps: denoise_steps || 30,
+        seed: seed ?? 42
+      }),
+      signal: controller.signal
+    });
+    const data = await response.json().catch(() => ({}));
+    res.status(response.status).json(data);
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      return res.status(504).json({
+        success: false,
+        message: 'AI try-on timed out. The free Hugging Face queue may be busy — please try again.'
+      });
+    }
+    res.status(503).json({
+      success: false,
+      message: 'AI Try-On API unavailable. Make sure the eCommerce API is running.',
+      error: error.message
+    });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+};
+
 // POST /api/tryon/virtual — perform AI virtual try-on
 exports.virtualTryOn = async (req, res) => {
   try {

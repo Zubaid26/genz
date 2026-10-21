@@ -24,7 +24,7 @@ app.use(cors({
   },
   credentials: true
 }));
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '20mb' }));
 app.use(cookieParser());
 
 // Make sure the database is connected before any API route runs

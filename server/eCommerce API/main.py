@@ -8,14 +8,22 @@ from fastapi.responses import StreamingResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
+import asyncio
 import io
 import base64
 import os
 import json
+import tempfile
+import uuid
+from concurrent.futures import ThreadPoolExecutor
 from PIL import Image
 import numpy as np
+import requests
 
 from model_handler import DressingInOrderHandler
+import idm_vton_client
+
+_ai_tryon_executor = ThreadPoolExecutor(max_workers=2)
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -65,6 +73,23 @@ class TryOnResponse(BaseModel):
     message: str
     result_image: Optional[str] = None  # Base64 encoded image
     image_url: Optional[str] = None
+
+
+class AITryOnRequest(BaseModel):
+    """Request for AI virtual try-on (IDM-VTON): real person photo + real garment photo"""
+    person_image: str  # Base64 encoded photo of the customer
+    garment_image: Optional[str] = None      # Base64 encoded garment photo
+    garment_image_url: Optional[str] = None  # OR a URL to a product photo
+    garment_description: Optional[str] = ""
+    denoise_steps: Optional[int] = 30
+    seed: Optional[int] = 42
+
+
+class AITryOnResponse(BaseModel):
+    """Response from AI virtual try-on"""
+    success: bool
+    message: str
+    result_image: Optional[str] = None  # Base64 encoded image
 
 
 @app.on_event("startup")
@@ -274,6 +299,87 @@ async def get_categories():
         raise HTTPException(status_code=500, detail=f"Error getting categories: {str(e)}")
 
 
+def _save_base64_image(b64_data: str, suffix: str = ".png") -> str:
+    """Decode a base64 (optionally data-URL prefixed) image to a temp file and return its path."""
+    if "," in b64_data and b64_data.strip().startswith("data:"):
+        b64_data = b64_data.split(",", 1)[1]
+    raw = base64.b64decode(b64_data)
+    path = os.path.join(tempfile.gettempdir(), f"tryon_{uuid.uuid4().hex}{suffix}")
+    with open(path, "wb") as f:
+        f.write(raw)
+    return path
+
+
+def _download_image(url: str, suffix: str = ".jpg") -> str:
+    """Download a remote image (e.g. a product photo) to a temp file and return its path."""
+    response = requests.get(url, timeout=20)
+    response.raise_for_status()
+    path = os.path.join(tempfile.gettempdir(), f"garment_{uuid.uuid4().hex}{suffix}")
+    with open(path, "wb") as f:
+        f.write(response.content)
+    return path
+
+
+@app.post("/api/ai-try-on", response_model=AITryOnResponse)
+async def ai_virtual_try_on(request: AITryOnRequest):
+    """
+    Real AI virtual try-on using the IDM-VTON Hugging Face Space: the customer's
+    own uploaded photo is combined with a garment photo (uploaded or a product
+    image URL) through a diffusion model, instead of picking from the fixed
+    Dressing-in-Order dataset of sample persons/garments.
+    """
+    if not request.person_image:
+        return AITryOnResponse(success=False, message="A photo of yourself is required.")
+    if not request.garment_image and not request.garment_image_url:
+        return AITryOnResponse(success=False, message="A garment image is required.")
+
+    person_path = None
+    garment_path = None
+    try:
+        person_path = _save_base64_image(request.person_image)
+        if request.garment_image:
+            garment_path = _save_base64_image(request.garment_image)
+        else:
+            garment_path = _download_image(request.garment_image_url)
+
+        loop = asyncio.get_event_loop()
+        result_path = await asyncio.wait_for(
+            loop.run_in_executor(
+                _ai_tryon_executor,
+                idm_vton_client.run_try_on,
+                person_path,
+                garment_path,
+                request.garment_description,
+                request.denoise_steps,
+                request.seed,
+            ),
+            timeout=150,
+        )
+
+        with open(result_path, "rb") as f:
+            img_str = base64.b64encode(f.read()).decode()
+
+        return AITryOnResponse(success=True, message="AI try-on complete.", result_image=img_str)
+
+    except asyncio.TimeoutError:
+        return AITryOnResponse(
+            success=False,
+            message="The AI try-on service timed out. It runs on a shared free queue (Hugging Face "
+                    "ZeroGPU) — please try again in a moment."
+        )
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return AITryOnResponse(success=False, message=f"AI try-on failed: {str(e)}")
+    finally:
+        for p in (person_path, garment_path):
+            try:
+                if p and os.path.exists(p):
+                    os.remove(p)
+            except Exception:
+                pass
+
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=2000)

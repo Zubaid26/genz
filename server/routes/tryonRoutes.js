@@ -15,5 +15,6 @@ router.get('/categories', ctrl.getCategories);
 router.get('/person-image/:category/:index', ctrl.getPersonImage);
 router.get('/garment-image/:category/:index/:garment_type', ctrl.getGarmentImage);
 router.post('/virtual', auth, ctrl.virtualTryOn);
+router.post('/ai-try-on', auth, ctrl.aiTryOn);
 
 module.exports = router;
