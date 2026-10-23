@@ -194,6 +194,62 @@
   text-align: center;
 }
 
+.vto-camera-open-btn {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.vto-camera-open-btn:hover { border-color: #22c55e; color: #22c55e; }
+
+.vto-camera-box {
+  position: relative;
+  min-height: 340px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+}
+.vto-camera-video {
+  width: 100%;
+  height: 100%;
+  min-height: 340px;
+  object-fit: cover;
+  display: block;
+  transform: scaleX(-1);
+}
+.vto-camera-controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.vto-camera-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.vto-camera-btn.capture { background: #22c55e; color: #000; }
+.vto-camera-btn.cancel { background: rgba(0,0,0,0.6); color: #fff; }
+
 .vto-result-frame {
   background: #0a0a0a;
   border-radius: 12px;

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { FiArrowLeft, FiCamera, FiLoader, FiCheck, FiUpload } from 'react-icons/fi';
+import { FiArrowLeft, FiCamera, FiLoader, FiCheck, FiUpload, FiX } from 'react-icons/fi';
 import API from '../utils/axiosInstance';
 import toast from 'react-hot-toast';
 import './TryOn.css';
@@ -9,11 +9,17 @@ export default function TryOn() {
   const [resultImage, setResultImage] = useState(null);
   const [processing, setProcessing] = useState(false);
 
-  // Customer's own photo + a real product photo (IDM-VTON)
+  // Customer's own photo + a real product photo (FASHN VTON)
   const [personPhoto, setPersonPhoto] = useState(null); // base64 data URL
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [loadingProducts, setLoadingProducts] = useState(true);
+
+  // Live camera capture
+  const [cameraOpen, setCameraOpen] = useState(false);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const streamRef = useRef(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -33,6 +39,8 @@ export default function TryOn() {
     return () => { cancelled = true; };
   }, []);
 
+  useEffect(() => () => streamRef.current?.getTracks().forEach((track) => track.stop()), []);
+
   const handlePersonPhotoChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -46,6 +54,46 @@ export default function TryOn() {
       setResultImage(null);
     };
     reader.readAsDataURL(file);
+  };
+
+  const stopCamera = () => {
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+    setCameraOpen(false);
+  };
+
+  const openCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 1280, height: 960, facingMode: 'user' },
+        audio: false,
+      });
+      streamRef.current = stream;
+      setCameraOpen(true);
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
+      }
+    } catch (err) {
+      toast.error('Could not access camera: ' + err.message);
+    }
+  };
+
+  const capturePhoto = () => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!video || !canvas) return;
+    const vw = video.videoWidth;
+    const vh = video.videoHeight;
+    let sw = vh * 3 / 4, sh = vh;
+    if (sw > vw) { sw = vw; sh = vw * 4 / 3; }
+    canvas.width = 768;
+    canvas.height = 1024;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, canvas.width, canvas.height);
+    setPersonPhoto(canvas.toDataURL('image/jpeg', 0.92));
+    setResultImage(null);
+    stopCamera();
   };
 
   const handleAITryOn = async () => {
@@ -92,17 +140,37 @@ export default function TryOn() {
 
       <div className="vto-layout">
         <section className="vto-panel">
-          <h2>1. Upload Your Photo</h2>
-          <label className="vto-upload">
-            <input type="file" accept="image/*" onChange={handlePersonPhotoChange} hidden />
-            {personPhoto ? (
-              <img src={personPhoto} alt="You" className="vto-upload-preview" />
-            ) : (
-              <span className="vto-upload-placeholder">
-                <FiUpload /> Click to choose a full-body photo
-              </span>
-            )}
-          </label>
+          <h2>1. Your Photo</h2>
+          {cameraOpen ? (
+            <div className="vto-camera-box">
+              <video ref={videoRef} playsInline muted className="vto-camera-video" />
+              <div className="vto-camera-controls">
+                <button type="button" className="vto-camera-btn capture" onClick={capturePhoto}>
+                  <FiCamera /> Capture
+                </button>
+                <button type="button" className="vto-camera-btn cancel" onClick={stopCamera}>
+                  <FiX /> Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <label className="vto-upload">
+                <input type="file" accept="image/*" onChange={handlePersonPhotoChange} hidden />
+                {personPhoto ? (
+                  <img src={personPhoto} alt="You" className="vto-upload-preview" />
+                ) : (
+                  <span className="vto-upload-placeholder">
+                    <FiUpload /> Click to choose a full-body photo
+                  </span>
+                )}
+              </label>
+              <button type="button" className="vto-camera-open-btn" onClick={openCamera}>
+                <FiCamera /> {personPhoto ? 'Retake with Camera' : 'Or use your camera'}
+              </button>
+            </>
+          )}
+          <canvas ref={canvasRef} hidden />
         </section>
 
         <section className="vto-panel">
