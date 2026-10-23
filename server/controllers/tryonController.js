@@ -146,7 +146,7 @@ exports.getGarmentImage = async (req, res) => {
 
 // POST /api/tryon/ai-try-on — real AI try-on: customer's own photo + a garment photo (IDM-VTON)
 exports.aiTryOn = async (req, res) => {
-  const { person_image, garment_image, garment_image_url, garment_description, denoise_steps, seed } = req.body;
+  const { person_image, garment_image, garment_image_url, garment_description, garment_category, denoise_steps, seed } = req.body;
   if (!person_image) {
     return res.status(400).json({ success: false, message: 'A photo of yourself is required.' });
   }
@@ -163,6 +163,7 @@ exports.aiTryOn = async (req, res) => {
       body: JSON.stringify({
         person_image, garment_image, garment_image_url,
         garment_description: garment_description || '',
+        garment_category: garment_category || '',
         denoise_steps: denoise_steps || 30,
         seed: seed ?? 42
       }),

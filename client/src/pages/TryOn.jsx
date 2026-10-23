@@ -64,6 +64,7 @@ export default function TryOn() {
         person_image: personPhoto,
         garment_image_url: selectedProduct.image_url,
         garment_description: selectedProduct.name,
+        garment_category: selectedProduct.category,
       });
       if (res.data?.success && res.data?.result_image) {
         setResultImage(`data:image/png;base64,${res.data.result_image}`);

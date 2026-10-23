@@ -13,3 +13,8 @@ server/eCommerce API/dressing-in-order/
 server/eCommerce API/*.zip
 server/eCommerce API/*.pth
 server/eCommerce API/data/
+.vercel
+
+# FASHN VTON v1.5 (vendored clone, its own repo + ~2GB weights + its own venv)
+# See server/eCommerce API/fashn_tryon_server.py for the setup + integration notes.
+fashn-vton-1.5/

@@ -21,7 +21,7 @@ import numpy as np
 import requests
 
 from model_handler import DressingInOrderHandler
-import idm_vton_client
+import fashn_client
 
 _ai_tryon_executor = ThreadPoolExecutor(max_workers=2)
 
@@ -76,11 +76,12 @@ class TryOnResponse(BaseModel):
 
 
 class AITryOnRequest(BaseModel):
-    """Request for AI virtual try-on (IDM-VTON): real person photo + real garment photo"""
+    """Request for AI virtual try-on (FASHN VTON v1.5): real person photo + real garment photo"""
     person_image: str  # Base64 encoded photo of the customer
     garment_image: Optional[str] = None      # Base64 encoded garment photo
     garment_image_url: Optional[str] = None  # OR a URL to a product photo
     garment_description: Optional[str] = ""
+    garment_category: Optional[str] = ""     # Product category, mapped to tops/bottoms/one-pieces
     denoise_steps: Optional[int] = 30
     seed: Optional[int] = 42
 
@@ -323,10 +324,11 @@ def _download_image(url: str, suffix: str = ".jpg") -> str:
 @app.post("/api/ai-try-on", response_model=AITryOnResponse)
 async def ai_virtual_try_on(request: AITryOnRequest):
     """
-    Real AI virtual try-on using the IDM-VTON Hugging Face Space: the customer's
-    own uploaded photo is combined with a garment photo (uploaded or a product
-    image URL) through a diffusion model, instead of picking from the fixed
-    Dressing-in-Order dataset of sample persons/garments.
+    Real AI virtual try-on using FASHN VTON v1.5, running locally on this
+    machine's GPU: the customer's own uploaded photo is combined with a
+    garment photo (uploaded or a product image URL) through a diffusion
+    model, instead of picking from the fixed Dressing-in-Order dataset of
+    sample persons/garments.
     """
     if not request.person_image:
         return AITryOnResponse(success=False, message="A photo of yourself is required.")
@@ -343,29 +345,28 @@ async def ai_virtual_try_on(request: AITryOnRequest):
             garment_path = _download_image(request.garment_image_url)
 
         loop = asyncio.get_event_loop()
-        result_path = await asyncio.wait_for(
+        result_bytes = await asyncio.wait_for(
             loop.run_in_executor(
                 _ai_tryon_executor,
-                idm_vton_client.run_try_on,
+                fashn_client.run_try_on,
                 person_path,
                 garment_path,
-                request.garment_description,
-                request.denoise_steps,
+                request.garment_category or request.garment_description,
                 request.seed,
+                request.denoise_steps,
             ),
             timeout=150,
         )
 
-        with open(result_path, "rb") as f:
-            img_str = base64.b64encode(f.read()).decode()
+        img_str = base64.b64encode(result_bytes).decode()
 
         return AITryOnResponse(success=True, message="AI try-on complete.", result_image=img_str)
 
     except asyncio.TimeoutError:
         return AITryOnResponse(
             success=False,
-            message="The AI try-on service timed out. It runs on a shared free queue (Hugging Face "
-                    "ZeroGPU) — please try again in a moment."
+            message="The AI try-on service timed out. Make sure the local FASHN VTON service "
+                    "(fashn-vton-1.5/tryon_server.py) is running."
         )
     except Exception as e:
         import traceback
