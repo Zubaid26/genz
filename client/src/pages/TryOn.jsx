@@ -10,16 +10,24 @@ export default function TryOn() {
   const [processing, setProcessing] = useState(false);
 
   // Customer's own photo + a real product photo (FASHN VTON)
-  const [personPhoto, setPersonPhoto] = useState(null); // base64 data URL
+  const [personPhoto, setPersonPhoto] = useState(null); // base64 data URL (static/upload mode)
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [loadingProducts, setLoadingProducts] = useState(true);
 
-  // Live camera capture
+  // Live camera try-on
   const [cameraOpen, setCameraOpen] = useState(false);
+  const [autoUpdate, setAutoUpdate] = useState(true);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
+  const liveSessionRef = useRef(0);
+  const busyRef = useRef(false);
+  const autoUpdateRef = useRef(true);
+  const selectedProductRef = useRef(null);
+
+  useEffect(() => { autoUpdateRef.current = autoUpdate; }, [autoUpdate]);
+  useEffect(() => { selectedProductRef.current = selectedProduct; }, [selectedProduct]);
 
   useEffect(() => {
     let cancelled = false;
@@ -39,7 +47,10 @@ export default function TryOn() {
     return () => { cancelled = true; };
   }, []);
 
-  useEffect(() => () => streamRef.current?.getTracks().forEach((track) => track.stop()), []);
+  useEffect(() => () => {
+    liveSessionRef.current++;
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+  }, []);
 
   const handlePersonPhotoChange = (e) => {
     const file = e.target.files?.[0];
@@ -56,10 +67,61 @@ export default function TryOn() {
     reader.readAsDataURL(file);
   };
 
-  const stopCamera = () => {
-    streamRef.current?.getTracks().forEach((track) => track.stop());
-    streamRef.current = null;
-    setCameraOpen(false);
+  const grabFrame = () => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!video || !canvas || !video.videoWidth) return null;
+    const vw = video.videoWidth, vh = video.videoHeight;
+    let sw = vh * 3 / 4, sh = vh;
+    if (sw > vw) { sw = vw; sh = vw * 4 / 3; }
+    canvas.width = 768;
+    canvas.height = 1024;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL('image/jpeg', 0.9);
+  };
+
+  const runTryOnOnce = async (photoDataUrl) => {
+    if (!photoDataUrl || busyRef.current) return;
+    if (!selectedProductRef.current) {
+      toast.error('Select a garment first');
+      return;
+    }
+    busyRef.current = true;
+    setProcessing(true);
+    try {
+      const res = await API.post('/tryon/ai-try-on', {
+        person_image: photoDataUrl,
+        garment_image_url: selectedProductRef.current.image_url,
+        garment_description: selectedProductRef.current.name,
+        garment_category: selectedProductRef.current.category,
+      });
+      if (res.data?.success && res.data?.result_image) {
+        setResultImage(`data:image/png;base64,${res.data.result_image}`);
+      } else {
+        toast.error(res.data?.message || 'AI try-on failed');
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'AI try-on request failed');
+    } finally {
+      busyRef.current = false;
+      setProcessing(false);
+    }
+  };
+
+  // Continuously refreshes the result from the live camera feed while the
+  // session is open and Auto-update is on. FASHN VTON takes ~30s per
+  // generation, so this updates the preview roughly every 30-40s — a
+  // continuously-refreshing live look, not real-time frame-by-frame video.
+  const runLiveLoop = async (sessionId) => {
+    while (liveSessionRef.current === sessionId) {
+      if (autoUpdateRef.current) {
+        const frame = grabFrame();
+        if (frame) await runTryOnOnce(frame);
+      }
+      if (liveSessionRef.current !== sessionId) break;
+      await new Promise((r) => setTimeout(r, 300));
+    }
   };
 
   const openCamera = async () => {
@@ -69,62 +131,38 @@ export default function TryOn() {
         audio: false,
       });
       streamRef.current = stream;
+      setPersonPhoto(null);
+      setResultImage(null);
       setCameraOpen(true);
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         await videoRef.current.play();
       }
+      const sessionId = ++liveSessionRef.current;
+      runLiveLoop(sessionId);
     } catch (err) {
       toast.error('Could not access camera: ' + err.message);
     }
   };
 
-  const capturePhoto = () => {
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    if (!video || !canvas) return;
-    const vw = video.videoWidth;
-    const vh = video.videoHeight;
-    let sw = vh * 3 / 4, sh = vh;
-    if (sw > vw) { sw = vw; sh = vw * 4 / 3; }
-    canvas.width = 768;
-    canvas.height = 1024;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, canvas.width, canvas.height);
-    setPersonPhoto(canvas.toDataURL('image/jpeg', 0.92));
-    setResultImage(null);
-    stopCamera();
+  const stopCamera = () => {
+    liveSessionRef.current++; // invalidates the running loop
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+    setCameraOpen(false);
   };
 
-  const handleAITryOn = async () => {
+  const handleTryOnNow = () => {
+    const frame = grabFrame();
+    if (frame) runTryOnOnce(frame);
+  };
+
+  const handleAITryOn = () => {
     if (!personPhoto) {
       toast.error('Upload a photo of yourself first');
       return;
     }
-    if (!selectedProduct) {
-      toast.error('Select a garment first');
-      return;
-    }
-    setProcessing(true);
-    setResultImage(null);
-    try {
-      const res = await API.post('/tryon/ai-try-on', {
-        person_image: personPhoto,
-        garment_image_url: selectedProduct.image_url,
-        garment_description: selectedProduct.name,
-        garment_category: selectedProduct.category,
-      });
-      if (res.data?.success && res.data?.result_image) {
-        setResultImage(`data:image/png;base64,${res.data.result_image}`);
-        toast.success('AI try-on complete!');
-      } else {
-        toast.error(res.data?.message || 'AI try-on failed');
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'AI try-on request failed');
-    } finally {
-      setProcessing(false);
-    }
+    runTryOnOnce(personPhoto);
   };
 
   return (
@@ -135,7 +173,7 @@ export default function TryOn() {
 
       <header className="vto-header">
         <h1><FiCamera /> Virtual Try-On</h1>
-        <p>Upload your own photo and pick a garment to generate a real AI try-on look.</p>
+        <p>Go live with your camera for a continuously-updating AI try-on, or upload a photo instead.</p>
       </header>
 
       <div className="vto-layout">
@@ -145,11 +183,19 @@ export default function TryOn() {
             <div className="vto-camera-box">
               <video ref={videoRef} playsInline muted className="vto-camera-video" />
               <div className="vto-camera-controls">
-                <button type="button" className="vto-camera-btn capture" onClick={capturePhoto}>
-                  <FiCamera /> Capture
+                <label className="vto-auto-toggle">
+                  <input
+                    type="checkbox"
+                    checked={autoUpdate}
+                    onChange={(e) => setAutoUpdate(e.target.checked)}
+                  />
+                  Auto-update
+                </label>
+                <button type="button" className="vto-camera-btn capture" onClick={handleTryOnNow} disabled={!selectedProduct}>
+                  <FiCamera /> Try On Now
                 </button>
                 <button type="button" className="vto-camera-btn cancel" onClick={stopCamera}>
-                  <FiX /> Cancel
+                  <FiX /> Stop Camera
                 </button>
               </div>
             </div>
@@ -166,7 +212,7 @@ export default function TryOn() {
                 )}
               </label>
               <button type="button" className="vto-camera-open-btn" onClick={openCamera}>
-                <FiCamera /> {personPhoto ? 'Retake with Camera' : 'Or use your camera'}
+                <FiCamera /> Go live with your camera
               </button>
             </>
           )}
@@ -200,32 +246,38 @@ export default function TryOn() {
         </section>
 
         <aside className="vto-result-panel">
-          <h2>3. Result</h2>
+          <h2>3. Result {cameraOpen && autoUpdate && <span className="vto-live-dot">LIVE</span>}</h2>
           <div className="vto-result-frame">
-            {processing ? (
-              <div className="vto-loading"><FiLoader className="spin" /> Generating your look… this can take up to a minute.</div>
-            ) : resultImage ? (
-              <img src={resultImage} alt="Try-on result" />
-            ) : (
+            {resultImage && <img src={resultImage} alt="Try-on result" />}
+            {processing && (
+              <div className={`vto-loading ${resultImage ? 'vto-loading-overlay' : ''}`}>
+                <FiLoader className="spin" /> {resultImage ? 'Updating…' : 'Generating your look… this can take up to a minute.'}
+              </div>
+            )}
+            {!resultImage && !processing && (
               <div className="vto-placeholder">
-                Upload your photo and pick a garment, then tap Generate.
+                {cameraOpen
+                  ? 'Pick a garment — your live try-on will appear here.'
+                  : 'Upload your photo and pick a garment, then tap Generate.'}
               </div>
             )}
           </div>
 
           <div className="vto-selected-summary">
-            <span>{personPhoto ? 'Photo uploaded' : 'No photo yet'}</span>
+            <span>{cameraOpen ? 'Camera live' : personPhoto ? 'Photo uploaded' : 'No photo yet'}</span>
             <span>{selectedProduct ? `Garment: ${selectedProduct.name}` : 'No garment selected'}</span>
           </div>
 
-          <button
-            type="button"
-            className="vto-run-btn"
-            onClick={handleAITryOn}
-            disabled={processing || !personPhoto || !selectedProduct}
-          >
-            {processing ? <><FiLoader className="spin" /> Processing…</> : <><FiCamera /> Generate AI Try-On</>}
-          </button>
+          {!cameraOpen && (
+            <button
+              type="button"
+              className="vto-run-btn"
+              onClick={handleAITryOn}
+              disabled={processing || !personPhoto || !selectedProduct}
+            >
+              {processing ? <><FiLoader className="spin" /> Processing…</> : <><FiCamera /> Generate AI Try-On</>}
+            </button>
+          )}
         </aside>
       </div>
     </div>

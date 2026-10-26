@@ -2,19 +2,12 @@ const router = require('express').Router();
 const auth = require('../middleware/authMiddleware');
 const ctrl = require('../controllers/tryonController');
 
-// Existing snapshot routes
+// Snapshot history
 router.post('/save-snapshot', auth, ctrl.saveSnapshot);
 router.get('/history', auth, ctrl.getHistory);
 
-// eCommerce Virtual Try-On API (proxied)
+// eCommerce Virtual Try-On API (FASHN VTON v1.5, proxied)
 router.get('/health', ctrl.getHealth);
-router.get('/persons', ctrl.getPersons);
-router.get('/garments', ctrl.getGarments);
-router.get('/garment-types', ctrl.getGarmentTypes);
-router.get('/categories', ctrl.getCategories);
-router.get('/person-image/:category/:index', ctrl.getPersonImage);
-router.get('/garment-image/:category/:index/:garment_type', ctrl.getGarmentImage);
-router.post('/virtual', auth, ctrl.virtualTryOn);
 router.post('/ai-try-on', auth, ctrl.aiTryOn);
 
 module.exports = router;

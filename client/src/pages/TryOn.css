@@ -248,9 +248,49 @@
   cursor: pointer;
 }
 .vto-camera-btn.capture { background: #22c55e; color: #000; }
+.vto-camera-btn.capture:disabled { opacity: 0.5; cursor: not-allowed; }
 .vto-camera-btn.cancel { background: rgba(0,0,0,0.6); color: #fff; }
 
+.vto-auto-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.vto-auto-toggle input { accent-color: #22c55e; cursor: pointer; }
+
+.vto-live-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+.vto-live-dot::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ef4444;
+  animation: vto-pulse 1.2s ease-in-out infinite;
+}
+@keyframes vto-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
 .vto-result-frame {
+  position: relative;
   background: #0a0a0a;
   border-radius: 12px;
   min-height: 360px;
@@ -259,6 +299,12 @@
   justify-content: center;
   overflow: hidden;
   border: 1px solid var(--card-border);
+}
+.vto-loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  min-height: 0;
 }
 .vto-result-frame img {
   width: 100%;
