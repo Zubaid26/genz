@@ -29,6 +29,16 @@ export default function TryOn() {
   useEffect(() => { autoUpdateRef.current = autoUpdate; }, [autoUpdate]);
   useEffect(() => { selectedProductRef.current = selectedProduct; }, [selectedProduct]);
 
+  // The <video> element only mounts once cameraOpen becomes true, so the
+  // stream can't be attached inside openCamera() itself (videoRef.current
+  // is still null at that point) — attach it here once it exists.
+  useEffect(() => {
+    if (cameraOpen && videoRef.current && streamRef.current) {
+      videoRef.current.srcObject = streamRef.current;
+      videoRef.current.play().catch(() => {});
+    }
+  }, [cameraOpen]);
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -134,10 +144,6 @@ export default function TryOn() {
       setPersonPhoto(null);
       setResultImage(null);
       setCameraOpen(true);
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        await videoRef.current.play();
-      }
       const sessionId = ++liveSessionRef.current;
       runLiveLoop(sessionId);
     } catch (err) {
